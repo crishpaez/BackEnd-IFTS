@@ -1,0 +1,35 @@
+extends ../layout.pug
+
+block content
+  h1 Lista de Empleados
+
+  if empleados.length
+    table(border='1', cellpadding='8', cellspacing='0')
+      thead
+        tr
+          th ID
+          th Nombre
+          th Apellido
+          th Rol
+          th Área
+          th Estado
+          th Acciones
+      tbody
+        each empleado in empleados
+          tr
+            td= empleado.id
+            td= empleado.nombre
+            td= empleado.apellido
+            td= empleado.rol
+            td= empleado.area
+            td= empleado.activo ? 'Activo' : 'Inactivo'
+            td
+              form(action=`/empleados/editar/${empleado.id}`, method='GET', style='display:inline')
+                button(type='submit') Editar
+              form(action=`/empleados/eliminar/${empleado.id}?_method=DELETE`, method='POST', style='display:inline')
+                button(type='submit', onclick='return confirm("¿Eliminar este empleado?")') Eliminar
+  else
+    p No hay empleados registrados.
+
+  form(action='/empleados/nuevo', method='GET')
+      button(type='submit') Agregar nuevo empleado

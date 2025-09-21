@@ -1,0 +1,23 @@
+extends ../layout.pug
+
+block content
+  h1 Áreas registradas
+
+  if areas.length
+    ul
+      each area in areas
+        li
+          p ID: #{area.id}
+          p Nombre: #{area.nombre}
+          p Descripción: #{area.descripcion}
+          form(action=`/areas/editar/${area.id}`, method='GET')
+            button(type='submit') Editar
+
+          form(action=`/areas/eliminar/${area.id}?_method=DELETE`, method='POST')
+            button(type='submit') Eliminar
+          hr
+  else
+    p No hay áreas registradas.
+
+  form(action='/areas/nueva', method='GET')
+    button(type='submit') Agregar nueva área

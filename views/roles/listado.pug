@@ -1,0 +1,17 @@
+doctype html
+html
+  head
+    title Listado de Roles
+  body
+    h1 Roles registrados
+
+    if roles.length
+      ul
+        each rol in roles
+          li
+            p ID: #{rol.id}
+            p Nombre: #{rol.nombre}
+            p Descripción: #{rol.descripcion}
+            hr
+    else
+      p No hay roles registrados.

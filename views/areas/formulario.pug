@@ -1,0 +1,13 @@
+extends ../layout.pug
+
+block content
+  h1 Crear nueva área
+
+  form(action='/areas/nueva', method='POST')
+    label(for='nombre') Nombre del área:
+    input(type='text', name='nombre', required)
+
+    label(for='descripcion') Descripción:
+    input(type='text', name='descripcion')
+
+    button(type='submit') Crear

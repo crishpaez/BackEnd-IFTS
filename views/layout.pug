@@ -1,0 +1,22 @@
+doctype html
+html
+  head
+    title= titulo || 'LogiFlow - Logística de Calidad'
+    meta(charset='utf-8')
+    meta(name='viewport', content='width=device-width, initial-scale=1.0')
+
+  body
+    header
+      h1 LogiFlow - Logística de Calidad
+      nav
+        ul
+          li: a(href='/areas') Áreas
+          li: a(href='/empleados') Empleados
+          li: a(href='/empleados') Roles
+          li: a(href='/tareas') Tareas
+
+    main
+      block content
+
+    footer
+      p © 2025 LogiFlow

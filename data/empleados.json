@@ -1,0 +1,26 @@
+[
+  {
+    "id": 1,
+    "nombre": "Lucía",
+    "apellido": "Gómez",
+    "rol": "operador",
+    "area": "operaciones",
+    "activo": true
+  },
+  {
+    "id": 2,
+    "nombre": "Martín",
+    "apellido": "Pérez",
+    "rol": "supervisor",
+    "area": "almacén",
+    "activo": "false"
+  },
+  {
+    "id": 3,
+    "nombre": "Sofía",
+    "apellido": "Ramírez",
+    "rol": "administrador",
+    "area": "administración",
+    "activo": true
+  }
+]

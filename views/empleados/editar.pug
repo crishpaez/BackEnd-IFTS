@@ -1,0 +1,28 @@
+extends ../layout.pug
+
+block content
+  h1 Editar empleado
+
+  form(action=`/empleados/editar/${empleado.id}?_method=PUT`, method='POST')
+    label(for='nombre') Nombre:
+    input(type='text', name='nombre', value=empleado.nombre, required)
+
+    label(for='apellido') Apellido:
+    input(type='text', name='apellido', value=empleado.apellido, required)
+
+    label(for='rol') Rol:
+    select(name='rol', id='rol', required)
+      each r in roles
+        option(value=r.nombre selected=(r.nombre === empleado.rol))= r.nombre
+
+    label(for='area') Área:
+    select(name='area', id='area', required)
+      each a in areas
+        option(value=a.nombre selected=(a.nombre === empleado.area))= a.nombre
+
+    label(for='activo') Estado:
+    select(name='activo', id='activo')
+      option(value='true', selected=empleado.activo === true) Activo
+      option(value='false', selected=empleado.activo === false) Inactivo
+
+    button(type='submit') Guardar cambios

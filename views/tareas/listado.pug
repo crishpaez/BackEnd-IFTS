@@ -1,0 +1,26 @@
+doctype html
+html
+  head
+    title Listado de Tareas
+  body
+    h1 Tareas registradas
+
+    if tareas.length
+      ul
+        each tarea in tareas
+          li
+            p ID: #{tarea.id}
+            p Descripción: #{tarea.descripcion}
+            p Estado: #{tarea.estado}
+            p Prioridad: #{tarea.prioridad}
+            p Área: #{tarea.area}
+            p Asignado a: #{tarea.asignadoA}
+            p Fecha de creación: #{tarea.fechaCreacion}
+            p Fecha de vencimiento: #{tarea.fechaVencimiento}
+            if tarea.fechaFinalizacion
+              p Fecha de finalización: #{tarea.fechaFinalizacion}
+            if tarea.incidencia
+              p Incidencia: #{tarea.incidencia}
+            hr
+    else
+      p No hay tareas registradas.

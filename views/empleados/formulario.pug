@@ -1,0 +1,23 @@
+extends ../layout.pug
+
+block content
+  h1 Crear nuevo Empleado
+
+  form(action='/empleados/nueva', method='POST')
+  label(for='nombre') Nombre
+  input(type='text', name='nombre', required)
+
+  label(for='apellido') Apellido
+  input(type='text', name='apellido', required)
+
+  label(for='rol') Rol
+  select(name='rol')
+    each r in roles
+      option(value=r)= r
+
+  label(for='area') Área
+  select(name='area')
+    each a in areas
+      option(value=a)= a
+
+  button(type='submit') Registrar

@@ -1,0 +1,13 @@
+extends ../layout.pug
+
+block content
+  h1 Editar área
+
+  form(action=`/areas/editar/${area.id}?_method=PUT`, method='POST')
+    label(for='nombre') Nombre del área
+    input(type='text', name='nombre', value=area.nombre, required)
+
+    label(for='descripcion') Descripción
+    input(type='text', name='descripcion', value=area.descripcion)
+
+    button(type='submit') Guardar cambios
