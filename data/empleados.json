@@ -13,7 +13,7 @@
     "apellido": "Pérez",
     "rol": "supervisor",
     "area": "almacén",
-    "activo": "false"
+    "activo": false
   },
   {
     "id": 3,
@@ -22,29 +22,5 @@
     "rol": "administrador",
     "area": "administración",
     "activo": true
-  },
-  {
-    "id": 4,
-    "nombre": "Pepe",
-    "apellido": "Perez",
-    "rol": "operador",
-    "area": "almacén",
-    "activo": true
-  },
-  {
-    "id": 5,
-    "nombre": "assa",
-    "apellido": "assa",
-    "rol": "administrador",
-    "area": "administración",
-    "activo": false
-  },
-  {
-    "id": 6,
-    "nombre": "aaasas",
-    "apellido": "aaaa",
-    "rol": "supervisor",
-    "area": "administración",
-    "activo": false
   }
 ]

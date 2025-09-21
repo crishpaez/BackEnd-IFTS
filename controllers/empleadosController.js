@@ -42,7 +42,6 @@ async function mostrarEmpleadoPorId(req, res) {
 // Redirección al Formulario para crear un nuevo empleado
 async function formularioNuevoEmpleado(req, res) {
   
-  //res.render('empleados/formulario', { titulo: 'Crear Nuevo Empleado' });
   try {
     const roles = await rolModelo.obtenerRoles();
     const areas = await areaModelo.obtenerAreas(); 
@@ -62,12 +61,16 @@ async function formularioNuevoEmpleado(req, res) {
 // Crear empleado
 async function guardarEmpleado(req, res) {
   try {
-    const { nombre, apellido, rol, area } = req.body;
-    if (!nombre || !apellido || !rol || !area ) {
-      return res.status(400).send('Nombre, apellido, rol y area son requeridos');
+    const { nombre, apellido, rol, area, activo } = req.body;
+    if (!nombre || !apellido || !rol || !area) {
+      return res.status(400).send('Nombre, apellido, rol y área son requeridos');
     }
 
-    await empleadoModelo.agregarEmpleado(nombre, apellido, rol, area);
+    if (activo !== 'true' && activo !== 'false') {
+      return res.status(400).send('El estado activo/inactivo es inválido');
+    }
+
+    await empleadoModelo.agregarEmpleado(nombre, apellido, rol, area, activo);
     res.redirect('/empleados');
   } catch (error) {
     console.error('Error al guardar empleado:', error);
