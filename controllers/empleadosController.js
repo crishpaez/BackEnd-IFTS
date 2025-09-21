@@ -1,5 +1,5 @@
 import empleadoModelo from '../models/Empleado.js';
-import rolModelo from '../models/Rol.js';
+import  rolModelo from '../models/Rol.js';
 import areaModelo from '../models/Area.js';
 
 
@@ -40,8 +40,23 @@ async function mostrarEmpleadoPorId(req, res) {
 }
 
 // Redirección al Formulario para crear un nuevo empleado
-function formularioNuevoEmpleado(req, res) {
-  res.render('empleados/formulario', { titulo: 'Crear Nuevo Empleado' });
+async function formularioNuevoEmpleado(req, res) {
+  
+  //res.render('empleados/formulario', { titulo: 'Crear Nuevo Empleado' });
+  try {
+    const roles = await rolModelo.obtenerRoles();
+    const areas = await areaModelo.obtenerAreas(); 
+
+    res.render('empleados/formulario', {
+      titulo: 'Crear Nuevo Empleado',
+      roles,
+      areas,
+      empleado: {} // campos vacíos
+    });
+  } catch (error) {
+    console.error('Error al cargar roles o áreas:', error);
+    res.status(500).send('Error al cargar el formulario');
+  }
 }
 
 // Crear empleado
@@ -52,7 +67,7 @@ async function guardarEmpleado(req, res) {
       return res.status(400).send('Nombre, apellido, rol y area son requeridos');
     }
 
-    await areaModelo.agregarArea(nombre, apellido, rol. area);
+    await empleadoModelo.agregarEmpleado(nombre, apellido, rol, area);
     res.redirect('/empleados');
   } catch (error) {
     console.error('Error al guardar empleado:', error);

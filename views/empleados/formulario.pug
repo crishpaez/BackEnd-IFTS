@@ -1,23 +1,28 @@
 extends ../layout.pug
 
 block content
-  h1 Crear nuevo Empleado
+  h1= titulo
 
   form(action='/empleados/nueva', method='POST')
-  label(for='nombre') Nombre
-  input(type='text', name='nombre', required)
+    label(for='nombre') Nombre
+    input(type='text', name='nombre', required, value=empleado.nombre || '')
 
-  label(for='apellido') Apellido
-  input(type='text', name='apellido', required)
+    label(for='apellido') Apellido
+    input(type='text', name='apellido', required, value=empleado.apellido || '')
 
-  label(for='rol') Rol
-  select(name='rol')
-    each r in roles
-      option(value=r)= r
+    label(for='rol') Rol:
+    select(name='rol', id='rol', required)
+      each r in roles
+        option(value=r.nombre selected=(r.nombre === empleado.rol))= r.nombre
 
-  label(for='area') Área
-  select(name='area')
-    each a in areas
-      option(value=a)= a
+    label(for='area') Área:
+    select(name='area', id='area', required)
+      each a in areas
+        option(value=a.nombre selected=(a.nombre === empleado.area))= a.nombre
+        
+    label(for='activo') Estado
+    select(name='activo', required)
+      option(value='true' selected=(empleado.activo === true)) Activo
+      option(value='false' selected=(empleado.activo === false)) Inactivo
 
-  button(type='submit') Registrar
+    button(type='submit') Registrar

@@ -40,7 +40,7 @@ async function agregarEmpleado(nombre, apellido, rol, area, activo) {
     apellido,
     rol,      // administrador | operador | supervisor
     area,     // operaciones | almacén | administración
-    activo: true
+    activo: activo === 'true'
   };
   empleados.push(nuevoEmpleado);
   await guardarEmpleados(empleados);
