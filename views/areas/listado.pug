@@ -3,6 +3,10 @@ extends ../layout.pug
 block content
   h1 Áreas registradas
 
+  if mensajeExito
+    script.
+      alert("#{mensajeExito}")
+
   if areas.length
     ul
       each area in areas
@@ -12,7 +16,6 @@ block content
           p Descripción: #{area.descripcion}
           form(action=`/areas/editar/${area.id}`, method='GET')
             button(type='submit') Editar
-
           form(action=`/areas/eliminar/${area.id}?_method=DELETE`, method='POST')
             button(type='submit', onclick='return confirm("¿Eliminar esta área?")') Eliminar
           hr

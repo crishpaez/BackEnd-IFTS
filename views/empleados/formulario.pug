@@ -3,26 +3,52 @@ extends ../layout.pug
 block content
   h1= titulo
 
-  form(action='/empleados/nueva', method='POST')
-    label(for='nombre') Nombre
-    input(type='text', name='nombre', required, value=empleado.nombre || '')
+  form(action='/empleados/nuevo', method='POST')
+    div
+      label(for='nombre') Nombre
+      br
+      input(type='text', name='nombre', id='nombre', required, value=empleado.nombre || '', style='width: 700px')
 
-    label(for='apellido') Apellido
-    input(type='text', name='apellido', required, value=empleado.apellido || '')
+    br
+    br
 
-    label(for='rol') Rol:
-    select(name='rol', id='rol', required)
-      each r in roles
-        option(value=r.nombre selected=(r.nombre === empleado.rol))= r.nombre
+    div
+      label(for='apellido') Apellido
+      br
+      input(type='text', name='apellido', id='apellido', required, value=empleado.apellido || '', style='width: 700px')
 
-    label(for='area') Área:
-    select(name='area', id='area', required)
-      each a in areas
-        option(value=a.nombre selected=(a.nombre === empleado.area))= a.nombre
-        
-    label(for='activo') Estado
-    select(name='activo', required)
-      option(value='true' selected=(empleado.activo === true)) Activo
-      option(value='false' selected=(empleado.activo === false)) Inactivo
+    br
+    br
 
-    button(type='submit') Registrar
+    div
+      label(for='rol') Rol
+      br
+      select(name='rol', id='rol', required, style='width: 700px')
+        each r in roles
+          option(value=r.nombre selected=(r.nombre === empleado.rol))= r.nombre
+
+    br
+    br
+
+    div
+      label(for='area') Área
+      br
+      select(name='area', id='area', required, style='width: 700px')
+        each a in areas
+          option(value=a.nombre selected=(a.nombre === empleado.area))= a.nombre
+
+    br
+    br
+
+    div
+      label(for='activo') Estado
+      br
+      select(name='activo', id='activo', required, style='width: 700px')
+        option(value='true', selected=empleado.activo === true) Activo
+        option(value='false', selected=empleado.activo === false) Inactivo
+
+    br
+    br
+
+    div
+      button(type='submit') Registrar

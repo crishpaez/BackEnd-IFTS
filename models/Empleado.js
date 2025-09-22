@@ -48,19 +48,7 @@ async function agregarEmpleado(nombre, apellido, rol, area, activo) {
 }
 
 // Funcion para actualizar un empleado por id -- desactivar, cambiar de rol, cambiar de area
-/*  async function actualizarEmpleadoPorId(id, nuevosDatos) {
-  const empleados = await obtenerEmpleados();
-  const index = empleados.findIndex(e => e.id == id);
-  //if (index === -1) return false;
-  if (index === -1) return null;
-
-  empleados[index] = { ...empleados[index], ...nuevosDatos };
-  await guardarEmpleados(empleados);
-  //return true;
-  return empleados[index];
-} */
-
-  async function actualizarEmpleadoPorId(id, nuevosDatos) {
+async function actualizarEmpleadoPorId(id, nuevosDatos) {
   const empleados = await obtenerEmpleados();
   const index = empleados.findIndex(e => e.id == id);
   if (index === -1) return null;
@@ -80,8 +68,13 @@ async function agregarEmpleado(nombre, apellido, rol, area, activo) {
 // Funcion para eliminar un empleado por su id
 async function eliminarEmpleadoPorId(id) {
   const empleados = await obtenerEmpleados();
-  const actualizados = empleados.filter(e => e.id !== id);
-  await guardarEmpleados(actualizados);
+  const index = empleados.findIndex(e => e.id === id);
+  if (index === -1) return null;
+
+  const eliminado = empleados[index];
+  empleados.splice(index, 1);
+  await guardarEmpleados(empleados);
+  return eliminado;
 }
 
 // Funcion para eliminar todas los empleados

@@ -4,10 +4,21 @@ block content
   h1 Crear nueva área
 
   form(action='/areas/nueva', method='POST')
-    label(for='nombre') Nombre del área:
-    input(type='text', name='nombre', required)
+    div
+      label(for='nombre') Nombre del área
+      br
+      input( type='text', name='nombre', required, style='width: 700px')
 
-    label(for='descripcion') Descripción:
-    input(type='text', name='descripcion')
+    br
+    br
 
-    button(type='submit') Crear
+    div
+      label(for='descripcion') Descripción
+      br
+      input(type='text', name='descripcion', required,style='width: 700px')
+
+    br
+    br
+
+    div
+      button(type='submit') Crear Área

@@ -50,8 +50,13 @@ async function actualizarArea(id, nuevosDatos) {
 // Funcion para eliminar un area por su id
 async function eliminarAreaPorId(id) {
   const areas = await obtenerAreas();
+  const index = areas.findIndex(area => area.id === id);
+  if (index === -1) return null;
+
+  const eliminada = areas[index]; 
   const actualizadas = areas.filter(e => e.id !== id);
   await guardarAreas(actualizadas);
+  return eliminada; 
 }
 
 // Funcion para eliminar todas las areas

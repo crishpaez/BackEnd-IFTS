@@ -5,11 +5,12 @@ const router = express.Router();
 
 // Vistas
 router.get('/', empleadosController.mostrarEmpleados);
-router.get('/nueva', empleadosController.formularioNuevoEmpleado); // ← esta primero
-router.post('/nueva', empleadosController.guardarEmpleado);
+router.get('/nuevo', empleadosController.formularioNuevoEmpleado);
+router.post('/nuevo', empleadosController.guardarEmpleado);
 router.get('/editar/:id', empleadosController.formularioEditarEmpleado);
 router.put('/editar/:id', empleadosController.actualizarEmpleado);
 router.delete('/eliminar/:id', empleadosController.eliminarEmpleado);
-router.get('/:id', empleadosController.mostrarEmpleadoPorId); // ← esta última
+router.get('/:id', empleadosController.mostrarEmpleadoPorId); 
+router.delete('/eliminar-todos', empleadosController.eliminarTodosLosEmpleados);
 
 export default router;

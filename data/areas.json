@@ -6,12 +6,17 @@
   },
   {
     "id": 2,
-    "nombre": "almacén",
-    "descripcion": "Área responsable del control de inventario, recepción y despacho de mercadería."
+    "nombre": "marketing",
+    "descripcion": "Área responsable de la propaganda"
   },
   {
     "id": 3,
     "nombre": "administración",
     "descripcion": "Área dedicada a la gestión documental, recursos humanos y soporte interno."
+  },
+  {
+    "id": 4,
+    "nombre": "transporte",
+    "descripcion": "Área responsable de la seguridad de los transportes y la logística interna."
   }
 ]

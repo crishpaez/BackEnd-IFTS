@@ -4,10 +4,21 @@ block content
   h1 Editar área
 
   form(action=`/areas/editar/${area.id}?_method=PUT`, method='POST')
-    label(for='nombre') Nombre del área
-    input(type='text', name='nombre', value=area.nombre, required)
+    div
+      label(for='nombre') Nombre del área
+      br
+      input(type='text', name='nombre', id='nombre', value=area.nombre, required, style='width: 700px')
 
-    label(for='descripcion') Descripción
-    input(type='text', name='descripcion', value=area.descripcion)
+    br
+    br
 
-    button(type='submit') Guardar cambios
+    div
+      label(for='descripcion') Descripción
+      br
+      input(type='text', name='descripcion', id='descripcion', value=area.descripcion, required, style='width: 700px')
+
+    br
+    br
+
+    div
+      button(type='submit') Guardar cambios

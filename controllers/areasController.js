@@ -1,13 +1,27 @@
 import areaModelo from '../models/Area.js';
+import { responder } from '../utils/respuestas.js';
+
 
 // Mostrar todas las áreas
 async function mostrarAreas(req, res) {
   try {
     const areas = await areaModelo.obtenerAreas();
-    res.render('areas/listado', { titulo: 'Lista de Áreas', areas });
+    const esJson = req.query.formato === 'json';
+    const mensajeExito = req.query.mensaje;
+
+    if (esJson) {
+      return responder(req, res, 200, 'Listado de áreas obtenido correctamente', areas);
+    }
+
+    res.render('areas/listado', {
+      titulo: 'Lista de Áreas',
+      areas,
+      mensajeExito
+    });
+
   } catch (error) {
     console.error('Error al obtener áreas:', error);
-    res.status(500).send('Error interno al cargar áreas');
+    return responder(req, res, 500, 'Error interno al cargar áreas', null, '/areas');
   }
 }
 
@@ -20,15 +34,16 @@ function formularioNuevaArea(req, res) {
 async function guardarArea(req, res) {
   try {
     const { nombre, descripcion } = req.body;
+
     if (!nombre || !descripcion) {
-      return res.status(400).send('Nombre y descripción son requeridos');
+      return responder(req, res, 400, 'Nombre y descripción son requeridos', null, '/areas');
     }
 
-    await areaModelo.agregarArea(nombre, descripcion);
-    res.redirect('/areas');
+    const nuevaArea = await areaModelo.agregarArea(nombre, descripcion);
+    return responder(req, res, 201, 'Área guardada exitosamente', nuevaArea, '/areas');
   } catch (error) {
     console.error('Error al guardar área:', error);
-    res.status(500).send('Error interno al guardar área');
+    return responder(req, res, 500, 'Error interno al guardar área', null, '/areas');
   }
 }
 
@@ -55,26 +70,45 @@ async function actualizarArea(req, res) {
     const nuevosDatos = req.body;
 
     const actualizada = await areaModelo.actualizarArea(id, nuevosDatos);
-    if (!actualizada) return res.status(404).send('Área no encontrada');
 
-    res.redirect('/areas');
+    if (!actualizada) {
+      return responder(req, res, 404, 'Área no encontrada', null, '/areas');
+    }
+
+    return responder(req, res, 200, 'Área actualizada correctamente', actualizada, '/areas');
   } catch (error) {
     console.error('Error al actualizar área:', error);
-    res.status(500).send('Error interno al actualizar área');
+    return responder(req, res, 500, 'Error interno al actualizar área', null, '/areas');
   }
 }
 
-// Eliminar un área por ID
+// Eliminar un área
 async function eliminarArea(req, res) {
   try {
     const id = parseInt(req.params.id);
-    await areaModelo.eliminarAreaPorId(id);
-    res.redirect('/areas');
+    const eliminada = await areaModelo.eliminarAreaPorId(id);
+
+    if (!eliminada) {
+      return responder(req, res, 404, 'Área no encontrada', null, '/areas');
+    }
+
+    return responder(req, res, 200, 'Área eliminada correctamente', eliminada, '/areas');
   } catch (error) {
     console.error('Error al eliminar área:', error);
-    res.status(500).send('Error interno al eliminar área');
+    return responder(req, res, 500, 'Error interno al eliminar área', null, '/areas');
   }
 }
 
-const areasController = { mostrarAreas, guardarArea, formularioNuevaArea, formularioEditarArea, actualizarArea, eliminarArea };
+//Eliminar todas las áreas
+async function eliminarTodasLasAreas(req, res) {
+  try {
+    await areaModelo.eliminarTodasLasAreas();
+    return responder(req, res, 200, 'Todas las áreas fueron eliminadas correctamente', null, '/areas');
+  } catch (error) {
+    console.error('Error al eliminar todas las áreas:', error);
+    return responder(req, res, 500, 'Error interno al eliminar todas las áreas', null, '/areas');
+  }
+}
+
+const areasController = { mostrarAreas, guardarArea, formularioNuevaArea, formularioEditarArea, actualizarArea, eliminarArea, eliminarTodasLasAreas };
 export default areasController;

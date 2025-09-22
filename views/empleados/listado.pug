@@ -1,10 +1,16 @@
 extends ../layout.pug
 
 block content
+  if mensajeExito
+    script.
+      alert("#{mensajeExito}")
+
   h1 Lista de Empleados
 
+  br
+
   if empleados.length
-    table(border='1', cellpadding='8', cellspacing='0')
+    table(border='1', cellpadding='8', cellspacing='0', style='width: 100%; border-collapse: collapse')
       thead
         tr
           th ID
@@ -31,5 +37,9 @@ block content
   else
     p No hay empleados registrados.
 
-  form(action='/empleados/nueva', method='GET')
+  br
+  br
+
+  div
+    form(action='/empleados/nuevo', method='GET')
       button(type='submit') Agregar nuevo empleado

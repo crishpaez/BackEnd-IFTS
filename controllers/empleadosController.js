@@ -1,16 +1,28 @@
 import empleadoModelo from '../models/Empleado.js';
 import  rolModelo from '../models/Rol.js';
 import areaModelo from '../models/Area.js';
+import { responder } from '../utils/respuestas.js';
 
 
 // Mostrar todas las áreas
 async function mostrarEmpleados(req, res) {
   try {
     const empleados = await empleadoModelo.obtenerEmpleados();
-    res.render('empleados/listado', { titulo: 'Lista de Empleados', empleados });
+    const esJson = req.query.formato === 'json';
+    const mensajeExito = req.query.mensaje;
+
+    if (esJson) {
+      return responder(req, res, 200, 'Listado de empleados obtenido correctamente', empleados);
+    }
+
+    res.render('empleados/listado', {
+      titulo: 'Lista de Empleados',
+      empleados,
+      mensajeExito
+    });
   } catch (error) {
     console.error('Error al obtener empleados:', error);
-    res.status(500).send('Error interno al cargar empleados');
+    return responder(req, res, 500, 'Error interno al cargar empleados', null, '/empleados');
   }
 }
 
@@ -19,14 +31,18 @@ async function mostrarEmpleadoPorId(req, res) {
   try {
     const id = parseInt(req.params.id);
     if (isNaN(id)) {
-      return res.status(400).send('ID inválido');
+      return responder(req, res, 400, 'ID inválido', null, '/empleados');
     }
 
-    const empleado = await obtenerEmpleadoPorId(id);
-
+    const empleado = await empleadoModelo.obtenerEmpleadoPorId(id);
     if (!empleado) {
       console.warn(`Empleado con ID ${id} no encontrado`);
-      return res.status(404).send('Empleado no encontrado');
+      return responder(req, res, 404, 'Empleado no encontrado', null, '/empleados');
+    }
+
+    const esJson = req.query.formato === 'json';
+    if (esJson) {
+      return responder(req, res, 200, 'Empleado encontrado correctamente', empleado);
     }
 
     res.render('empleados/ver', {
@@ -35,7 +51,7 @@ async function mostrarEmpleadoPorId(req, res) {
     });
   } catch (error) {
     console.error('Error al buscar empleado por ID:', error);
-    res.status(500).send('Error interno al buscar empleado');
+    return responder(req, res, 500, 'Error interno al buscar empleado', null, '/empleados');
   }
 }
 
@@ -50,7 +66,7 @@ async function formularioNuevoEmpleado(req, res) {
       titulo: 'Crear Nuevo Empleado',
       roles,
       areas,
-      empleado: {} // campos vacíos
+      empleado: {} 
     });
   } catch (error) {
     console.error('Error al cargar roles o áreas:', error);
@@ -59,26 +75,31 @@ async function formularioNuevoEmpleado(req, res) {
 }
 
 // Crear empleado
-async function guardarEmpleado(req, res) {
+  async function guardarEmpleado(req, res) {
   try {
     const { nombre, apellido, rol, area, activo } = req.body;
+
+    // Validación de campos obligatorios
     if (!nombre || !apellido || !rol || !area) {
-      return res.status(400).send('Nombre, apellido, rol y área son requeridos');
+      return responder(req, res, 400, 'Nombre, apellido, rol y área son requeridos', null, '/empleados');
     }
 
+    // Validación de estado activo/inactivo
     if (activo !== 'true' && activo !== 'false') {
-      return res.status(400).send('El estado activo/inactivo es inválido');
+      return responder(req, res, 400, 'El estado activo/inactivo es inválido', null, '/empleados');
     }
 
-    await empleadoModelo.agregarEmpleado(nombre, apellido, rol, area, activo);
-    res.redirect('/empleados');
+    const nuevoEmpleado = await empleadoModelo.agregarEmpleado(nombre, apellido, rol, area, activo);
+    return responder(req, res, 201, 'Empleado creado exitosamente', nuevoEmpleado, '/empleados');
   } catch (error) {
     console.error('Error al guardar empleado:', error);
-    res.status(500).send('Error interno al guardar empleado');
+    return responder(req, res, 500, 'Error interno al guardar empleado', null, '/empleados');
+
   }
 }
 
-// Redirección al Formulario para editar empleado
+
+// Redirección al Formulario para editar empleado 
 async function formularioEditarEmpleado(req, res) {
   try {
     const id = parseInt(req.params.id);
@@ -106,12 +127,15 @@ async function actualizarEmpleado(req, res) {
     const nuevosDatos = req.body;
 
     const actualizado = await empleadoModelo.actualizarEmpleadoPorId(id, nuevosDatos);
-    if (!actualizado) return res.status(404).send('Empleado no encontrado');
+    if (!actualizado) {
+      return responder(req, res, 404, 'Empleado no encontrado', null, '/empleados');
+    }
+    //res.redirect('/empleados');
+    return responder(req, res, 200, 'Empleado actualizado correctamente', actualizado, '/empleados');
 
-    res.redirect('/empleados');
   } catch (error) {
     console.error('Error al actualizar empleado:', error);
-    res.status(500).send('Error interno al actualizar empleado');
+    return responder(req, res, 500, 'Error interno al actualizar empleado', null, '/empleados');
   }
 }
 
@@ -119,13 +143,29 @@ async function actualizarEmpleado(req, res) {
 async function eliminarEmpleado(req, res) {
   try {
     const id = parseInt(req.params.id);
-    await empleadoModelo.eliminarEmpleadoPorId(id);
-    res.redirect('/empleados');
+    const eliminado = await empleadoModelo.eliminarEmpleadoPorId(id);
+
+    if (!eliminado) {
+      return responder(req, res, 404, 'Empleado no encontrado', null, '/empleados');
+    }
+
+    return responder(req, res, 200, 'Empleado eliminado correctamente', eliminado, '/empleados');
   } catch (error) {
     console.error('Error al eliminar empleado:', error);
-    res.status(500).send('Error interno al eliminar empleado');
+    return responder(req, res, 500, 'Error interno al eliminar empleado', null, '/empleados');
   }
 }
 
-const empleadosController = { mostrarEmpleados, mostrarEmpleadoPorId, guardarEmpleado, formularioNuevoEmpleado, formularioEditarEmpleado, actualizarEmpleado, eliminarEmpleado };
+// Eliminar todos los empleados
+async function eliminarTodosLosEmpleados(req, res) {
+  try {
+    await empleadoModelo.eliminarTodasLosEmpleados();
+    return responder(req, res, 200, 'Todos los empleados fueron eliminados correctamente', null, '/empleados');
+  } catch (error) {
+    console.error('Error al eliminar todos los empleados:', error);
+    return responder(req, res, 500, 'Error interno al eliminar todos los empleados', null, '/empleados');
+  }
+}
+
+const empleadosController = { mostrarEmpleados, mostrarEmpleadoPorId, guardarEmpleado, formularioNuevoEmpleado, formularioEditarEmpleado, actualizarEmpleado, eliminarEmpleado, eliminarTodosLosEmpleados };
 export default empleadosController

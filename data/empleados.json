@@ -9,18 +9,18 @@
   },
   {
     "id": 2,
-    "nombre": "Martín",
-    "apellido": "Pérez",
-    "rol": "supervisor",
-    "area": "almacén",
-    "activo": false
-  },
-  {
-    "id": 3,
-    "nombre": "Sofía",
-    "apellido": "Ramírez",
+    "nombre": "Oscar",
+    "apellido": "Martinez",
     "rol": "administrador",
     "area": "administración",
     "activo": true
+  },
+  {
+    "id": 3,
+    "nombre": "Mario",
+    "apellido": "Benitez",
+    "rol": "operador",
+    "area": "transporte",
+    "activo": false
   }
 ]
