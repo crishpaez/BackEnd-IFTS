@@ -5,6 +5,8 @@ import methodOverride from 'method-override';
 import areasRoutes from './routes/areasRoutes.js';
 import empleadosRoutes from './routes/empleadosRoutes.js';
 import indexRoutes from './routes/indexRoutes.js';
+import 'dotenv/config';
+import { connectDB } from './config/db.js';
 
 /* 
 import rolesRoutes from './routes/rolesRoutes.js';
@@ -24,6 +26,9 @@ app.use(methodOverride('_method'));
 // Configuración de vistas (Pug)
 app.set('view engine', 'pug');
 app.set('views', path.join(__dirname, 'views'));
+
+// Conectar Mongo antes de montar rutas
+await connectDB();
 
 // Rutas
 app.use('/', indexRoutes);

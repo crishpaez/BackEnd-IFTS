@@ -1,87 +1,100 @@
-import { readFile, writeFile } from 'fs/promises';
-import path from 'path';
-import { fileURLToPath } from 'url';
-import { generarId } from '../utils/idGenerator.js';
+// models/Empleado.js
+import mongoose from 'mongoose';
 
+const EmpleadoSchema = new mongoose.Schema(
+  {
+    id: { type: Number, index: true, unique: true },
+    nombre: { type: String, required: true, trim: true },
+    apellido: { type: String, required: true, trim: true },
+    rol: { type: String, required: true, trim: true },   // admin|operador|supervisor
+    area: { type: String, required: true, trim: true },  // operaciones|almacén|...
+    activo: { type: Boolean, default: true },
+  },
+  { versionKey: false, timestamps: true }
+);
 
-// Ruta del archivo JSON
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-const filePath = path.join(__dirname, '../data/empleados.json');
+const EmpleadoModel =
+  mongoose.models.Empleado || mongoose.model('Empleado', EmpleadoSchema);
 
-// Funcion para obtener todos los empleados
-async function obtenerEmpleados() {
-  try {
-    const data = await readFile(filePath, 'utf-8');
-    return JSON.parse(data);
-  } catch {
-    return [];
+async function nextId() {
+  const last = await EmpleadoModel.findOne().sort({ id: -1 }).lean();
+  return last?.id ? last.id + 1 : 1;
+}
+
+// === API igual a la que usan tus controladores ===
+export async function obtenerEmpleados() {
+  return await EmpleadoModel.find().sort({ id: 1 }).lean();
+}
+
+export async function obtenerEmpleadoPorId(id) {
+  return await EmpleadoModel.findOne({ id: Number(id) }).lean();
+}
+
+export async function guardarEmpleados(empleados) {
+  await EmpleadoModel.deleteMany({});
+  if (Array.isArray(empleados) && empleados.length) {
+    await EmpleadoModel.insertMany(
+      empleados.map(e => ({
+        id: e.id,
+        nombre: e.nombre,
+        apellido: e.apellido,
+        rol: e.rol,
+        area: e.area,
+        activo: !!e.activo,
+      }))
+    );
   }
 }
 
-// Funcion para obtener un empleado por id
-async function obtenerEmpleadoPorId(id) {
-  const empleados = await obtenerEmpleados();
-  return empleados.find(e => e.id == id) || null;
-}
-
-
-// Funcion para guardar los empleados en el archivo json
-async function guardarEmpleados(empleados) {
-  await writeFile(filePath, JSON.stringify(empleados, null, 2));
-}
-
-// Funcion para agregar un empleado
-async function agregarEmpleado(nombre, apellido, rol, area, activo) {
-  const empleados = await obtenerEmpleados();
-  const nuevoEmpleado = {
-    id: generarId(empleados),
+export async function agregarEmpleado(nombre, apellido, rol, area, activo) {
+  const id = await nextId();
+  const doc = await EmpleadoModel.create({
+    id,
     nombre,
     apellido,
-    rol,      // administrador | operador | supervisor
-    area,     // operaciones | almacén | administración
-    activo: activo === 'true'
+    rol,
+    area,
+    activo: String(activo) === 'true',
+  });
+  return {
+    id: doc.id,
+    nombre: doc.nombre,
+    apellido: doc.apellido,
+    rol: doc.rol,
+    area: doc.area,
+    activo: doc.activo,
   };
-  empleados.push(nuevoEmpleado);
-  await guardarEmpleados(empleados);
-  return nuevoEmpleado;
 }
 
-// Funcion para actualizar un empleado por id -- desactivar, cambiar de rol, cambiar de area
-async function actualizarEmpleadoPorId(id, nuevosDatos) {
-  const empleados = await obtenerEmpleados();
-  const index = empleados.findIndex(e => e.id == id);
-  if (index === -1) return null;
+export async function actualizarEmpleadoPorId(id, nuevosDatos) {
+  const payload = { ...nuevosDatos };
+  if ('activo' in payload) payload.activo = String(payload.activo) === 'true';
 
-  // Convertir activo a booleano si existe
-  if ('activo' in nuevosDatos) {
-    nuevosDatos.activo = nuevosDatos.activo === 'true';
-  }
-
-  empleados[index] = { ...empleados[index], ...nuevosDatos };
-  await guardarEmpleados(empleados);
-  return empleados[index];
+  const updated = await EmpleadoModel.findOneAndUpdate(
+    { id: Number(id) },
+    { $set: payload },
+    { new: true }
+  ).lean();
+  return updated;
 }
 
-
-
-// Funcion para eliminar un empleado por su id
-async function eliminarEmpleadoPorId(id) {
-  const empleados = await obtenerEmpleados();
-  const index = empleados.findIndex(e => e.id === id);
-  if (index === -1) return null;
-
-  const eliminado = empleados[index];
-  empleados.splice(index, 1);
-  await guardarEmpleados(empleados);
-  return eliminado;
+export async function eliminarEmpleadoPorId(id) {
+  const deleted = await EmpleadoModel.findOneAndDelete({ id: Number(id) }).lean();
+  return deleted;
 }
 
-// Funcion para eliminar todas los empleados
-async function eliminarTodasLosEmpleados() {
-  await guardarEmpleados([]); // Sobrescribe el archivo con un array vacío
+export async function eliminarTodasLosEmpleados() {
+  await EmpleadoModel.deleteMany({});
 }
 
+const empleadoModelo = {
+  obtenerEmpleados,
+  obtenerEmpleadoPorId,
+  guardarEmpleados,
+  agregarEmpleado,
+  actualizarEmpleadoPorId,
+  eliminarEmpleadoPorId,
+  eliminarTodasLosEmpleados,
+};
 
-const empleadoModelo = { obtenerEmpleados, obtenerEmpleadoPorId, guardarEmpleados, agregarEmpleado, actualizarEmpleadoPorId, eliminarEmpleadoPorId, eliminarTodasLosEmpleados };
 export default empleadoModelo;

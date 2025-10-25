@@ -1,69 +1,77 @@
-import { readFile, writeFile } from 'fs/promises';
-import path from 'path';
-import { fileURLToPath } from 'url';
+// models/Area.js
+import mongoose from 'mongoose';
 import { generarId } from '../utils/idGenerator.js';
 
-// Ruta del archivo JSON
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-const filePath = path.join(__dirname, '../data/areas.json');
+// Esquema con campo 'id' numérico para compatibilidad
+const AreaSchema = new mongoose.Schema(
+  {
+    id: { type: Number, index: true, unique: true },
+    nombre: { type: String, required: true, trim: true },
+    descripcion: { type: String, required: true, trim: true },
+  },
+  { versionKey: false, timestamps: true }
+);
 
-// Funcion para obtener todas las areas
-async function obtenerAreas() {
-  try {
-    const data = await readFile(filePath, 'utf-8');
-    return JSON.parse(data);
-  } catch {
-    return [];
+const AreaModel = mongoose.models.Area || mongoose.model('Area', AreaSchema);
+
+// Helpers
+async function nextId() {
+  const last = await AreaModel.findOne().sort({ id: -1 }).lean();
+  return last?.id ? last.id + 1 : 1;
+}
+
+// === API usada por tus controladores ===
+
+export async function obtenerAreas() {
+  const areas = await AreaModel.find().sort({ id: 1 }).lean();
+  return areas.map(({ id, nombre, descripcion }) => ({ id, nombre, descripcion }));
+}
+
+export async function guardarAreas(areas) {
+  // Solo para compatibilidad cuando se llama a "borrar todo" y volver a guardar
+  await AreaModel.deleteMany({});
+  if (Array.isArray(areas) && areas.length) {
+    await AreaModel.insertMany(
+      areas.map(a => ({ id: a.id, nombre: a.nombre, descripcion: a.descripcion }))
+    );
   }
 }
 
-// Funcion para guardar las areas en el archivo json
-async function guardarAreas(areas) {
-  await writeFile(filePath, JSON.stringify(areas, null, 2));
+export async function agregarArea(nombre, descripcion) {
+  const id = await nextId();
+  const doc = await AreaModel.create({ id, nombre, descripcion });
+  return { id: doc.id, nombre: doc.nombre, descripcion: doc.descripcion };
 }
 
-// Funcion para agregar una area
-async function agregarArea(nombre, descripcion) {
-  const areas = await obtenerAreas();
-  const nuevaArea = {
-    id: generarId(areas),
-    nombre, // operaciones | almacén | administración
-    descripcion
-  };
-  areas.push(nuevaArea);
-  await guardarAreas(areas);
-  return nuevaArea;
+export async function actualizarArea(id, nuevosDatos) {
+  const updated = await AreaModel.findOneAndUpdate(
+    { id: Number(id) },
+    { $set: { ...nuevosDatos } },
+    { new: true }
+  ).lean();
+  return updated
+    ? { id: updated.id, nombre: updated.nombre, descripcion: updated.descripcion }
+    : null;
 }
 
-// Funcion para actualizar un area con su id
-async function actualizarArea(id, nuevosDatos) {
-  const areas = await obtenerAreas();
-  const index = areas.findIndex(a => a.id === id);
-  if (index === -1) return null;
-
-  areas[index] = { ...areas[index], ...nuevosDatos};
-  await guardarAreas(areas);
-  return areas[index];
+export async function eliminarAreaPorId(id) {
+  const deleted = await AreaModel.findOneAndDelete({ id: Number(id) }).lean();
+  return deleted
+    ? { id: deleted.id, nombre: deleted.nombre, descripcion: deleted.descripcion }
+    : null;
 }
 
-// Funcion para eliminar un area por su id
-async function eliminarAreaPorId(id) {
-  const areas = await obtenerAreas();
-  const index = areas.findIndex(area => area.id === id);
-  if (index === -1) return null;
-
-  const eliminada = areas[index]; 
-  const actualizadas = areas.filter(e => e.id !== id);
-  await guardarAreas(actualizadas);
-  return eliminada; 
+export async function eliminarTodasLasAreas() {
+  await AreaModel.deleteMany({});
 }
 
-// Funcion para eliminar todas las areas
-async function eliminarTodasLasAreas() {
-  await guardarAreas([]); // Sobrescribe el archivo con un array vacío
-}
+const areaModelo = {
+  obtenerAreas,
+  guardarAreas,
+  agregarArea,
+  actualizarArea,
+  eliminarAreaPorId,
+  eliminarTodasLasAreas,
+};
 
-
-const areaModelo = { obtenerAreas, guardarAreas, agregarArea, actualizarArea, eliminarAreaPorId, eliminarTodasLasAreas };
 export default areaModelo;
