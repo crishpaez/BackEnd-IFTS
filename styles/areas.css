@@ -1,0 +1,11 @@
+@import url('./layout.css');
+
+/* Estilos específicos para áreas */
+.area-listado {
+  margin-top: 2rem;
+}
+
+.area-listado li {
+  padding: 0.5rem;
+  border-bottom: 1px solid #ccc;
+}

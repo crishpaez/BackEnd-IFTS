@@ -5,9 +5,9 @@ html
   body
     h1 Roles registrados
 
-    if roles.length
+    if datos && datos.length
       ul
-        each rol in roles
+        each rol in datos
           li
             p ID: #{rol.id}
             p Nombre: #{rol.nombre}

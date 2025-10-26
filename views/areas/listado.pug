@@ -1,15 +1,15 @@
 extends ../layout.pug
 
-block content
+block contenido
   h1 Áreas registradas
 
   if mensajeExito
     script.
       alert("#{mensajeExito}")
 
-  if areas.length
+  if datos && datos.length
     ul
-      each area in areas
+      each area in datos
         li
           p ID: #{area.id}
           p Nombre: #{area.nombre}
@@ -24,3 +24,4 @@ block content
 
   form(action='/areas/nueva', method='GET')
     button(type='submit') Agregar nueva área
+    

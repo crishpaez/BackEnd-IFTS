@@ -1,60 +1,90 @@
-const fs = require('fs').promises;
-const path = require('path');
-const Tarea = require('../models/Tarea');
+import Tarea from '../modelsDB/Tarea.js';
+import { responder } from '../utils/respuestas.js';
 
-const rutaArchivo = path.join(__dirname, '../data/tareas.json');
-
-// Leer todas las tareas
-async function obtenerTareas() {
-  const data = await fs.readFile(rutaArchivo, 'utf-8');
-  return JSON.parse(data);
+// Mostrar todas las tareas
+export async function mostrarTareas(req, res) {
+  try {
+    const tareas = await Tarea.find().populate('empleado');
+    responder(req, res, 200, 'Listado de Tareas', tareas, null, 'tareas/listado');
+  } catch (error) {
+    responder(req, res, 500, 'Error al obtener tareas');
+  }
 }
 
-// Crear una nueva tarea
-async function crearTarea(datos) {
-  const tareas = await obtenerTareas();
-  const nuevaTarea = new Tarea({
-    id: Date.now().toString(),
-    ...datos
-  });
-  tareas.push(nuevaTarea);
-  await fs.writeFile(rutaArchivo, JSON.stringify(tareas, null, 2));
-  return nuevaTarea;
-}
-
-// Filtrar tareas por estado, prioridad, fecha o área
-async function filtrarTareas({ estado, prioridad, area }) {
-  const tareas = await obtenerTareas();
-  return tareas.filter(t => {
-    return (!estado || t.estado === estado) &&
-           (!prioridad || t.prioridad === prioridad) &&
-           (!area || t.area === area);
+// Formulario para crear nueva tarea
+export function formularioNuevaTarea(req, res) {
+  res.render('tareas/formulario', {
+    titulo: 'Crear nueva tarea',
+    mensaje: req.query.mensaje || null
   });
 }
 
-// Actualizar una tarea por ID
-async function actualizarTarea(id, nuevosDatos) {
-  const tareas = await obtenerTareas();
-  const index = tareas.findIndex(t => t.id === id);
-  if (index === -1) return null;
-
-  tareas[index] = { ...tareas[index], ...nuevosDatos };
-  await fs.writeFile(rutaArchivo, JSON.stringify(tareas, null, 2));
-  return tareas[index];
+// Guardar nueva tarea
+export async function guardarTarea(req, res) {
+  try {
+    const { titulo, descripcion, empleado, fecha } = req.body;
+    const nueva = await Tarea.create({ titulo, descripcion, empleado, fecha });
+    responder(req, res, 201, 'Tarea creada correctamente', nueva, '/tareas');
+  } catch (error) {
+    responder(req, res, 400, 'Error al crear tarea');
+  }
 }
 
-// Eliminar una tarea por ID
-async function eliminarTarea(id) {
-  const tareas = await obtenerTareas();
-  const tareasFiltradas = tareas.filter(t => t.id !== id);
-  await fs.writeFile(rutaArchivo, JSON.stringify(tareasFiltradas, null, 2));
-  return tareasFiltradas.length < tareas.length;
+// Formulario para editar tarea
+export async function formularioEditarTarea(req, res) {
+  try {
+    const tarea = await Tarea.findById(req.params.id);
+    if (!tarea) return responder(req, res, 404, 'Tarea no encontrada');
+    res.render('tareas/editar', {
+      titulo: 'Editar tarea',
+      tarea,
+      mensaje: req.query.mensaje || null
+    });
+  } catch (error) {
+    responder(req, res, 500, 'Error al cargar formulario de edición');
+  }
 }
 
-module.exports = {
-  obtenerTareas,
-  crearTarea,
-  filtrarTareas,
+// Actualizar tarea
+export async function actualizarTarea(req, res) {
+  try {
+    const actualizada = await Tarea.findByIdAndUpdate(req.params.id, req.body, { new: true });
+    if (!actualizada) return responder(req, res, 404, 'Tarea no encontrada');
+    responder(req, res, 200, 'Tarea actualizada correctamente', actualizada, '/tareas');
+  } catch (error) {
+    responder(req, res, 500, 'Error al actualizar tarea');
+  }
+}
+
+// Eliminar tarea
+export async function eliminarTarea(req, res) {
+  try {
+    const eliminada = await Tarea.findByIdAndDelete(req.params.id);
+    if (!eliminada) return responder(req, res, 404, 'Tarea no encontrada');
+    responder(req, res, 200, 'Tarea eliminada correctamente', eliminada, '/tareas');
+  } catch (error) {
+    responder(req, res, 500, 'Error al eliminar tarea');
+  }
+}
+
+// Eliminar todas las tareas
+export async function eliminarTodasLasTareas(req, res) {
+  try {
+    await Tarea.deleteMany({});
+    responder(req, res, 200, 'Todas las tareas fueron eliminadas', null, '/tareas');
+  } catch (error) {
+    responder(req, res, 500, 'Error al eliminar todas las tareas');
+  }
+}
+
+const tareasController = {
+  mostrarTareas,
+  formularioNuevaTarea,
+  guardarTarea,
+  formularioEditarTarea,
   actualizarTarea,
-  eliminarTarea
+  eliminarTarea,
+  eliminarTodasLasTareas
 };
+
+export default tareasController;

@@ -1,6 +1,6 @@
 extends ../layout.pug
 
-block content
+block contenido
   if mensajeExito
     script.
       alert("#{mensajeExito}")
@@ -9,7 +9,7 @@ block content
 
   br
 
-  if empleados.length
+  if datos && datos.length
     table(border='1', cellpadding='8', cellspacing='0', style='width: 100%; border-collapse: collapse')
       thead
         tr
@@ -21,7 +21,7 @@ block content
           th Estado
           th Acciones
       tbody
-        each empleado in empleados
+        each empleado in datos
           tr
             td= empleado.id
             td= empleado.nombre

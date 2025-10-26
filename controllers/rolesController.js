@@ -1,49 +1,83 @@
-const fs = require('fs').promises;
-const path = require('path');
-const Rol = require('../models/Rol');
+import Rol from '../modelsDB/Rol.js';
+import { responder } from '../utils/respuestas.js';
 
-const rutaArchivo = path.join(__dirname, '../data/roles.json');
-
-// Leer todos los roles
-async function obtenerRoles() {
-  const data = await fs.readFile(rutaArchivo, 'utf-8');
-  return JSON.parse(data);
+export async function mostrarRoles(req, res) {
+  try {
+    const roles = await Rol.find();
+    responder(req, res, 200, 'Listado de Roles', roles, null, 'roles/listado');
+  } catch (error) {
+    responder(req, res, 500, 'Error al obtener roles');
+  }
 }
 
-// Crear un nuevo rol
-async function crearRol(datos) {
-  const roles = await obtenerRoles();
-  const nuevoRol = new Rol({
-    id: Date.now().toString(),
-    ...datos
+export function formularioNuevoRol(req, res) {
+  res.render('roles/formulario', {
+    titulo: 'Crear nuevo rol',
+    mensaje: req.query.mensaje || null
   });
-  roles.push(nuevoRol);
-  await fs.writeFile(rutaArchivo, JSON.stringify(roles, null, 2));
-  return nuevoRol;
 }
 
-// Actualizar un rol por ID
-async function actualizarRol(id, nuevosDatos) {
-  const roles = await obtenerRoles();
-  const index = roles.findIndex(r => r.id === id);
-  if (index === -1) return null;
-
-  roles[index] = { ...roles[index], ...nuevosDatos };
-  await fs.writeFile(rutaArchivo, JSON.stringify(roles, null, 2));
-  return roles[index];
+export async function guardarRol(req, res) {
+  try {
+    const { nombre, descripcion } = req.body;
+    const nuevo = await Rol.create({ nombre, descripcion });
+    responder(req, res, 201, 'Rol creado correctamente', nuevo, '/roles');
+  } catch (error) {
+    responder(req, res, 400, 'Error al crear rol');
+  }
 }
 
-// Eliminar un rol por ID
-async function eliminarRol(id) {
-  const roles = await obtenerRoles();
-  const rolesFiltrados = roles.filter(r => r.id !== id);
-  await fs.writeFile(rutaArchivo, JSON.stringify(rolesFiltrados, null, 2));
-  return rolesFiltrados.length < roles.length;
+export async function formularioEditarRol(req, res) {
+  try {
+    const rol = await Rol.findById(req.params.id);
+    if (!rol) return responder(req, res, 404, 'Rol no encontrado');
+    res.render('roles/editar', {
+      titulo: 'Editar rol',
+      rol,
+      mensaje: req.query.mensaje || null
+    });
+  } catch (error) {
+    responder(req, res, 500, 'Error al cargar formulario de edición');
+  }
 }
 
-module.exports = {
-  obtenerRoles,
-  crearRol,
+export async function actualizarRol(req, res) {
+  try {
+    const actualizado = await Rol.findByIdAndUpdate(req.params.id, req.body, { new: true });
+    if (!actualizado) return responder(req, res, 404, 'Rol no encontrado');
+    responder(req, res, 200, 'Rol actualizado correctamente', actualizado, '/roles');
+  } catch (error) {
+    responder(req, res, 500, 'Error al actualizar rol');
+  }
+}
+
+export async function eliminarRol(req, res) {
+  try {
+    const eliminado = await Rol.findByIdAndDelete(req.params.id);
+    if (!eliminado) return responder(req, res, 404, 'Rol no encontrado');
+    responder(req, res, 200, 'Rol eliminado correctamente', eliminado, '/roles');
+  } catch (error) {
+    responder(req, res, 500, 'Error al eliminar rol');
+  }
+}
+
+export async function eliminarTodosLosRoles(req, res) {
+  try {
+    await Rol.deleteMany({});
+    responder(req, res, 200, 'Todos los roles fueron eliminados', null, '/roles');
+  } catch (error) {
+    responder(req, res, 500, 'Error al eliminar todos los roles');
+  }
+}
+
+const rolesController = {
+  mostrarRoles,
+  formularioNuevoRol,
+  guardarRol,
+  formularioEditarRol,
   actualizarRol,
-  eliminarRol
+  eliminarRol,
+  eliminarTodosLosRoles
 };
+
+export default rolesController;

@@ -1,27 +1,20 @@
 {
-  "name": "webfix-logiflow-backend",
+  "name": "backend-ifts",
   "version": "1.0.0",
-  "description": "Sistema de gestión logística para LogiFlow - 1° entrega",
+  "description": "Sistema de gestión logística para LogiFlow",
   "main": "app.js",
+  "type": "module",
   "scripts": {
     "start": "node app.js",
     "dev": "nodemon app.js"
   },
-  "type": "module",
-  "keywords": [
-    "logística",
-    "backend",
-    "nodejs",
-    "express",
-    "json",
-    "pug"
-  ],
-  "author": "Grupo 8 - Silvana Fernández, Cristian Paez, Dante Serruto F.",
+  "author": "Silvana Fernández",
   "license": "MIT",
   "dependencies": {
     "dotenv": "^17.2.2",
     "express": "^4.21.2",
     "method-override": "^3.0.0",
+    "mongoose": "^8.0.0",
     "pug": "^3.0.3"
   },
   "devDependencies": {

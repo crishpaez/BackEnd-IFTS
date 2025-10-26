@@ -1,6 +1,6 @@
 extends ../layout.pug
 
-block content
+block contenido
   h1 Editar área
 
   form(action=`/areas/editar/${area.id}?_method=PUT`, method='POST')
@@ -22,3 +22,4 @@ block content
 
     div
       button(type='submit') Guardar cambios
+      

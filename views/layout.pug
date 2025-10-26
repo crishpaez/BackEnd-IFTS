@@ -3,20 +3,25 @@ html
   head
     title= titulo || 'LogiFlow - Logística de Calidad'
     meta(charset='utf-8')
-    meta(name='viewport', content='width=device-width, initial-scale=1.0')
+    link(rel="stylesheet", href="./style/layout.css")
+    if hojaEstilo
+      link(rel="stylesheet", href=`./styles/${hojaEstilo}.css`)
 
   body
     header
       h1 LogiFlow - Logística de Calidad
+      block contenido
+      
+    main
       nav
         ul
+          li: a(href='/') Inicio
           li: a(href='/areas') Áreas
           li: a(href='/empleados') Empleados
           li: a(href='/roles') Roles
           li: a(href='/tareas') Tareas
 
-    main
-      block content
-
     footer
+      hr
       p © 2025 LogiFlow - Web desarrollada por WebFix
+      

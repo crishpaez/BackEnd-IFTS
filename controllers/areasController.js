@@ -1,114 +1,83 @@
-import areaModelo from '../models/Area.js';
+import Area from '../modelsDB/Area.js';
 import { responder } from '../utils/respuestas.js';
 
-
-// Mostrar todas las áreas
-async function mostrarAreas(req, res) {
+export async function mostrarAreas(req, res) {
   try {
-    const areas = await areaModelo.obtenerAreas();
-    const esJson = req.query.formato === 'json';
-    const mensajeExito = req.query.mensaje;
-
-    if (esJson) {
-      return responder(req, res, 200, 'Listado de áreas obtenido correctamente', areas);
-    }
-
-    res.render('areas/listado', {
-      titulo: 'Lista de Áreas',
-      areas,
-      mensajeExito
-    });
-
+    const areas = await Area.find();
+    responder(req, res, 200, 'Listado de Áreas', areas, null, 'areas/listado');
   } catch (error) {
-    console.error('Error al obtener áreas:', error);
-    return responder(req, res, 500, 'Error interno al cargar áreas', null, '/areas');
+    responder(req, res, 500, 'Error al obtener áreas');
   }
 }
 
-// Redirección al Formulario para crear una nueva área
-function formularioNuevaArea(req, res) {
-  res.render('areas/formulario', { titulo: 'Crear Nueva Area' });
+export function formularioNuevaArea(req, res) {
+  res.render('areas/formulario', {
+    titulo: 'Crear nueva área',
+    mensaje: req.query.mensaje || null
+  });
 }
 
-// Crear área
-async function guardarArea(req, res) {
+export async function guardarArea(req, res) {
   try {
     const { nombre, descripcion } = req.body;
-
-    if (!nombre || !descripcion) {
-      return responder(req, res, 400, 'Nombre y descripción son requeridos', null, '/areas');
-    }
-
-    const nuevaArea = await areaModelo.agregarArea(nombre, descripcion);
-    return responder(req, res, 201, 'Área guardada exitosamente', nuevaArea, '/areas');
+    const nueva = await Area.create({ nombre, descripcion });
+    responder(req, res, 201, 'Área creada correctamente', nueva, '/areas');
   } catch (error) {
-    console.error('Error al guardar área:', error);
-    return responder(req, res, 500, 'Error interno al guardar área', null, '/areas');
+    responder(req, res, 400, 'Error al crear área');
   }
 }
 
-
-// Redirección al Formulario para editar area
-async function formularioEditarArea(req, res) {
+export async function formularioEditarArea(req, res) {
   try {
-    const id = parseInt(req.params.id);
-    const areas = await areaModelo.obtenerAreas();
-    const area = areas.find(a => a.id === id);
-    if (!area) return res.status(404).send('Área no encontrado');
-
-    res.render('areas/editar', { titulo: 'Editar Área', area });
+    const area = await Area.findById(req.params.id);
+    if (!area) return responder(req, res, 404, 'Área no encontrada');
+    res.render('areas/editar', {
+      titulo: 'Editar área',
+      area,
+      mensaje: req.query.mensaje || null
+    });
   } catch (error) {
-    console.error('Error al cargar formulario de edición:', error);
-    res.status(500).send('Error interno al cargar formulario');
+    responder(req, res, 500, 'Error al cargar formulario de edición');
   }
 }
 
-// Actualizar un área
-async function actualizarArea(req, res) {
+export async function actualizarArea(req, res) {
   try {
-    const id = parseInt(req.params.id);
-    const nuevosDatos = req.body;
-
-    const actualizada = await areaModelo.actualizarArea(id, nuevosDatos);
-
-    if (!actualizada) {
-      return responder(req, res, 404, 'Área no encontrada', null, '/areas');
-    }
-
-    return responder(req, res, 200, 'Área actualizada correctamente', actualizada, '/areas');
+    const actualizada = await Area.findByIdAndUpdate(req.params.id, req.body, { new: true });
+    if (!actualizada) return responder(req, res, 404, 'Área no encontrada');
+    responder(req, res, 200, 'Área actualizada correctamente', actualizada, '/areas');
   } catch (error) {
-    console.error('Error al actualizar área:', error);
-    return responder(req, res, 500, 'Error interno al actualizar área', null, '/areas');
+    responder(req, res, 500, 'Error al actualizar área');
   }
 }
 
-// Eliminar un área
-async function eliminarArea(req, res) {
+export async function eliminarArea(req, res) {
   try {
-    const id = parseInt(req.params.id);
-    const eliminada = await areaModelo.eliminarAreaPorId(id);
-
-    if (!eliminada) {
-      return responder(req, res, 404, 'Área no encontrada', null, '/areas');
-    }
-
-    return responder(req, res, 200, 'Área eliminada correctamente', eliminada, '/areas');
+    const eliminada = await Area.findByIdAndDelete(req.params.id);
+    if (!eliminada) return responder(req, res, 404, 'Área no encontrada');
+    responder(req, res, 200, 'Área eliminada correctamente', eliminada, '/areas');
   } catch (error) {
-    console.error('Error al eliminar área:', error);
-    return responder(req, res, 500, 'Error interno al eliminar área', null, '/areas');
+    responder(req, res, 500, 'Error al eliminar área');
   }
 }
 
-//Eliminar todas las áreas
-async function eliminarTodasLasAreas(req, res) {
+export async function eliminarTodasLasAreas(req, res) {
   try {
-    await areaModelo.eliminarTodasLasAreas();
-    return responder(req, res, 200, 'Todas las áreas fueron eliminadas correctamente', null, '/areas');
+    await Area.deleteMany({});
+    responder(req, res, 200, 'Todas las áreas fueron eliminadas', null, '/areas');
   } catch (error) {
-    console.error('Error al eliminar todas las áreas:', error);
-    return responder(req, res, 500, 'Error interno al eliminar todas las áreas', null, '/areas');
+    responder(req, res, 500, 'Error al eliminar todas las áreas');
   }
 }
 
-const areasController = { mostrarAreas, guardarArea, formularioNuevaArea, formularioEditarArea, actualizarArea, eliminarArea, eliminarTodasLasAreas };
+const areasController = {
+  mostrarAreas,
+  formularioNuevaArea,
+  guardarArea,
+  formularioEditarArea,
+  actualizarArea,
+  eliminarArea,
+  eliminarTodasLasAreas
+};
+
 export default areasController;

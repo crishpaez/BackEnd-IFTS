@@ -5,9 +5,9 @@ html
   body
     h1 Tareas registradas
 
-    if tareas.length
+    if datos && datos.length
       ul
-        each tarea in tareas
+        each tarea in datos
           li
             p ID: #{tarea.id}
             p Descripción: #{tarea.descripcion}
