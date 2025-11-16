@@ -1,0 +1,90 @@
+@charset "UTF-8";
+
+/* Reset básico */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Tipografía y fondo general */
+body {
+  font-family: 'Segoe UI', sans-serif;
+  background-color: #f9f9f9;
+  color: #333;
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Encabezado */
+header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+header h1 {
+  font-size: 2rem;
+  color: #005b96;
+}
+
+/* Navegación */
+nav ul {
+  list-style: none;
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  padding: 0;
+}
+
+nav a {
+  text-decoration: none;
+  color: #005b96;
+  font-weight: bold;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  transition: background-color 0.3s ease;
+}
+
+nav a:hover {
+  background-color: #e6f0ff;
+}
+
+/* Contenido principal */
+main {
+  width: 100%;
+  max-width: 900px;
+  text-align: center;
+}
+
+/* Títulos */
+main h2, main h1 {
+  margin-bottom: 1rem;
+  color: #444;
+}
+
+/* Listas generales */
+main ul {
+  list-style: none;
+  padding: 0;
+  margin-top: 1rem;
+}
+
+main li {
+  margin: 0.5rem 0;
+}
+
+/* Mensajes */
+p[style*="green"] {
+  color: green;
+  font-weight: bold;
+}
+
+/* Footer */
+footer {
+  margin-top: 3rem;
+  font-size: 0.9rem;
+  color: #777;
+  text-align: center;
+}

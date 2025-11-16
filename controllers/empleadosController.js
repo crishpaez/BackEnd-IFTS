@@ -1,10 +1,9 @@
 import empleadoModelo from '../models/Empleado.js';
-import  rolModelo from '../models/Rol.js';
+import rolModelo from '../models/Rol.js';
 import areaModelo from '../models/Area.js';
 import { responder } from '../utils/respuestas.js';
 
-
-// Mostrar todas las áreas
+// Mostrar todos los empleados
 async function mostrarEmpleados(req, res) {
   try {
     const empleados = await empleadoModelo.obtenerEmpleados();
@@ -18,7 +17,8 @@ async function mostrarEmpleados(req, res) {
     res.render('empleados/listado', {
       titulo: 'Lista de Empleados',
       empleados,
-      mensajeExito
+      mensajeExito,
+      hojaEstilo: 'empleados/listado'
     });
   } catch (error) {
     console.error('Error al obtener empleados:', error);
@@ -26,7 +26,7 @@ async function mostrarEmpleados(req, res) {
   }
 }
 
-// Mostrar empleado por id
+// Mostrar empleado por ID
 async function mostrarEmpleadoPorId(req, res) {
   try {
     const id = parseInt(req.params.id);
@@ -47,7 +47,8 @@ async function mostrarEmpleadoPorId(req, res) {
 
     res.render('empleados/ver', {
       titulo: 'Detalle del Empleado',
-      empleado
+      empleado,
+      hojaEstilo: 'empleados/ver'
     });
   } catch (error) {
     console.error('Error al buscar empleado por ID:', error);
@@ -55,18 +56,18 @@ async function mostrarEmpleadoPorId(req, res) {
   }
 }
 
-// Redirección al Formulario para crear un nuevo empleado
+// Formulario para crear nuevo empleado
 async function formularioNuevoEmpleado(req, res) {
-  
   try {
     const roles = await rolModelo.obtenerRoles();
-    const areas = await areaModelo.obtenerAreas(); 
+    const areas = await areaModelo.obtenerAreas();
 
     res.render('empleados/formulario', {
       titulo: 'Crear Nuevo Empleado',
       roles,
       areas,
-      empleado: {} 
+      empleado: {},
+      hojaEstilo: 'empleados/formulario'
     });
   } catch (error) {
     console.error('Error al cargar roles o áreas:', error);
@@ -74,17 +75,15 @@ async function formularioNuevoEmpleado(req, res) {
   }
 }
 
-// Crear empleado
-  async function guardarEmpleado(req, res) {
+// Guardar nuevo empleado
+async function guardarEmpleado(req, res) {
   try {
     const { nombre, apellido, rol, area, activo } = req.body;
 
-    // Validación de campos obligatorios
     if (!nombre || !apellido || !rol || !area) {
       return responder(req, res, 400, 'Nombre, apellido, rol y área son requeridos', null, '/empleados');
     }
 
-    // Validación de estado activo/inactivo
     if (activo !== 'true' && activo !== 'false') {
       return responder(req, res, 400, 'El estado activo/inactivo es inválido', null, '/empleados');
     }
@@ -94,33 +93,34 @@ async function formularioNuevoEmpleado(req, res) {
   } catch (error) {
     console.error('Error al guardar empleado:', error);
     return responder(req, res, 500, 'Error interno al guardar empleado', null, '/empleados');
-
   }
 }
 
-
-// Redirección al Formulario para editar empleado 
+// Formulario para editar empleado
 async function formularioEditarEmpleado(req, res) {
   try {
     const id = parseInt(req.params.id);
     const empleados = await empleadoModelo.obtenerEmpleados();
-    const roles = await rolModelo.obtenerRoles();      
+    const roles = await rolModelo.obtenerRoles();
     const areas = await areaModelo.obtenerAreas();
-
 
     const empleado = empleados.find(a => a.id === id);
     if (!empleado) return res.status(404).send('Empleado no encontrado');
 
-    res.render('empleados/editar', {titulo: 'Editar Empleado', empleado, roles, areas});
-
-
+    res.render('empleados/editar', {
+      titulo: 'Editar Empleado',
+      empleado,
+      roles,
+      areas,
+      hojaEstilo: 'empleados/editar'
+    });
   } catch (error) {
     console.error('Error al cargar formulario de edición de empleado:', error);
     res.status(500).send('Error interno al cargar formulario de empleado');
   }
 }
 
-// Actualizar un empleado
+// Actualizar empleado
 async function actualizarEmpleado(req, res) {
   try {
     const id = parseInt(req.params.id);
@@ -130,16 +130,15 @@ async function actualizarEmpleado(req, res) {
     if (!actualizado) {
       return responder(req, res, 404, 'Empleado no encontrado', null, '/empleados');
     }
-    //res.redirect('/empleados');
-    return responder(req, res, 200, 'Empleado actualizado correctamente', actualizado, '/empleados');
 
+    return responder(req, res, 200, 'Empleado actualizado correctamente', actualizado, '/empleados');
   } catch (error) {
     console.error('Error al actualizar empleado:', error);
     return responder(req, res, 500, 'Error interno al actualizar empleado', null, '/empleados');
   }
 }
 
-// Eliminar un empleado por ID
+// Eliminar empleado por ID
 async function eliminarEmpleado(req, res) {
   try {
     const id = parseInt(req.params.id);
@@ -167,5 +166,15 @@ async function eliminarTodosLosEmpleados(req, res) {
   }
 }
 
-const empleadosController = { mostrarEmpleados, mostrarEmpleadoPorId, guardarEmpleado, formularioNuevoEmpleado, formularioEditarEmpleado, actualizarEmpleado, eliminarEmpleado, eliminarTodosLosEmpleados };
-export default empleadosController
+const empleadosController = {
+  mostrarEmpleados,
+  mostrarEmpleadoPorId,
+  guardarEmpleado,
+  formularioNuevoEmpleado,
+  formularioEditarEmpleado,
+  actualizarEmpleado,
+  eliminarEmpleado,
+  eliminarTodosLosEmpleados
+};
+
+export default empleadosController;

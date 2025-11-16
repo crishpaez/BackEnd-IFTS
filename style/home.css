@@ -1,0 +1,38 @@
+@import url('./layout.css');
+
+/* Contenedor principal de la portada */
+main {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 70vh;
+  text-align: center;
+}
+
+/* Título de bienvenida */
+main h2 {
+  font-size: 2.5rem;
+  color: #005b96;
+  margin-bottom: 1rem;
+  font-weight: bold;
+  text-shadow: 1px 1px 2px #ccc;
+}
+
+/* Texto descriptivo */
+main p {
+  font-size: 1.2rem;
+  color: #444;
+  max-width: 600px;
+  line-height: 1.6;
+}
+
+/* Animación sutil de entrada */
+main h2, main p {
+  animation: fadeIn 1.2s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}

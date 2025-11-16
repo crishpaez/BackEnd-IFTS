@@ -26,6 +26,7 @@ app.use(methodOverride('_method'));
 // Configuración de vistas (Pug)
 app.set('view engine', 'pug');
 app.set('views', path.join(__dirname, 'views'));
+app.use('/styles', express.static(path.join(__dirname, 'styles')));
 
 // Conectar Mongo antes de montar rutas
 await connectDB();
