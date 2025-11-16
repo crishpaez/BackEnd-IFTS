@@ -1,52 +1,18 @@
-const express = require('express');
+import express from 'express';
+import { obtenerRoles, mostrarFormulario, crearRol, eliminarRol } from '../controllers/rolesController.js';
+
 const router = express.Router();
-const {
-  obtenerRoles,
-  crearRol,
-  actualizarRol,
-  eliminarRol
-} = require('../controllers/rolesController');
 
-// Obtener todos los roles
-router.get('/', async (req, res) => {
-  try {
-    const roles = await obtenerRoles();
-    res.json(roles);
-  } catch (error) {
-    res.status(500).json({ error: 'Error al obtener roles' });
-  }
-});
+// Listar roles
+router.get('/', obtenerRoles);
 
-// Crear un nuevo rol
-router.post('/', async (req, res) => {
-  try {
-    const nuevo = await crearRol(req.body);
-    res.status(201).json(nuevo);
-  } catch (error) {
-    res.status(500).json({ error: 'Error al crear rol' });
-  }
-});
+// Mostrar formulario de creación
+router.get('/nuevo', mostrarFormulario);
 
-// Actualizar un rol
-router.put('/:id', async (req, res) => {
-  try {
-    const actualizado = await actualizarRol(req.params.id, req.body);
-    if (!actualizado) return res.status(404).json({ error: 'Rol no encontrado' });
-    res.json(actualizado);
-  } catch (error) {
-    res.status(500).json({ error: 'Error al actualizar rol' });
-  }
-});
+// Crear rol
+router.post('/', crearRol);
 
-// Eliminar un rol
-router.delete('/:id', async (req, res) => {
-  try {
-    const eliminado = await eliminarRol(req.params.id);
-    if (!eliminado) return res.status(404).json({ error: 'Rol no encontrado' });
-    res.json({ mensaje: 'Rol eliminado correctamente' });
-  } catch (error) {
-    res.status(500).json({ error: 'Error al eliminar rol' });
-  }
-});
+// Eliminar rol
+router.post('/eliminar/:id', eliminarRol);
 
-module.exports = router;
+export default router;

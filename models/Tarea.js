@@ -1,41 +1,11 @@
-class Tarea {
-  constructor({
-    id,
-    descripcion,
-    estado = 'pendiente',
-    prioridad = 'media',
-    fechaCreacion = new Date().toISOString(),
-    fechaVencimiento = null,
-    fechaFinalizacion = null,
-    area,
-    asignadoA = null,
-    incidencia = null
-  }) {
-    this.id = id;
-    this.descripcion = descripcion;
-    this.estado = estado; // pendiente | en proceso | finalizada
-    this.prioridad = prioridad; // alta | media | baja
-    this.fechaCreacion = fechaCreacion;
-    this.fechaVencimiento = fechaVencimiento;
-    this.fechaFinalizacion = fechaFinalizacion;
-    this.area = area; // operaciones | almacén
-    this.asignadoA = asignadoA; // ID de empleado
-    this.incidencia = incidencia; // texto opcional
-  }
+import mongoose from 'mongoose';
 
-  finalizar(fecha = new Date().toISOString()) {
-    this.estado = 'finalizada';
-    this.fechaFinalizacion = fecha;
-  }
+const tareaSchema = new mongoose.Schema({
+  titulo: { type: String, required: true, trim: true },
+  descripcion: { type: String, required: true, trim: true },
+  estado: { type: String, enum: ['pendiente', 'en progreso', 'completada'], default: 'pendiente' }
+}, { timestamps: true });
 
-  asignarEmpleado(idEmpleado) {
-    this.asignadoA = idEmpleado;
-  }
+const Tarea = mongoose.model('Tarea', tareaSchema);
 
-  registrarIncidencia(texto) {
-    this.incidencia = texto;
-    this.estado = 'en proceso';
-  }
-}
-
-module.exports = Tarea;
+export default Tarea;

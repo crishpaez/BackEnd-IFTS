@@ -1,0 +1,21 @@
+@import url('./formulario.css');
+
+/* Ajustes específicos de la vista editar */
+h1 {
+  text-align: center;
+  margin-top: 1rem;
+}
+
+/* Diferencia sutil para edición */
+.form-tarea {
+  border-color: #99c2e6;
+  background-color: #f7fbff;
+}
+
+.btn-guardar {
+  background-color: #0077cc;
+}
+
+.btn-guardar:hover {
+  background-color: #005b96;
+}

@@ -1,60 +1,92 @@
-const fs = require('fs').promises;
-const path = require('path');
-const Tarea = require('../models/Tarea');
+import Tarea from '../models/Tarea.js';
+import { responder } from '../utils/respuestas.js';
 
-const rutaArchivo = path.join(__dirname, '../data/tareas.json');
-
-// Leer todas las tareas
-async function obtenerTareas() {
-  const data = await fs.readFile(rutaArchivo, 'utf-8');
-  return JSON.parse(data);
+// Listar todas las tareas
+export async function obtenerTareas(req, res) {
+  try {
+    const tareas = await Tarea.find();
+    res.render('tareas/listado', { 
+      tareas, 
+      mensajeExito: req.query.mensajeExito || null,
+      hojaEstilo: 'tareas/listado'  
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Error al obtener tareas');
+  }
 }
 
-// Crear una nueva tarea
-async function crearTarea(datos) {
-  const tareas = await obtenerTareas();
-  const nuevaTarea = new Tarea({
-    id: Date.now().toString(),
-    ...datos
-  });
-  tareas.push(nuevaTarea);
-  await fs.writeFile(rutaArchivo, JSON.stringify(tareas, null, 2));
-  return nuevaTarea;
-}
-
-// Filtrar tareas por estado, prioridad, fecha o área
-async function filtrarTareas({ estado, prioridad, area }) {
-  const tareas = await obtenerTareas();
-  return tareas.filter(t => {
-    return (!estado || t.estado === estado) &&
-           (!prioridad || t.prioridad === prioridad) &&
-           (!area || t.area === area);
+// Mostrar formulario de creación
+export function mostrarFormulario(req, res) {
+  res.render('tareas/formulario', { 
+    hojaEstilo: 'tareas/formulario'  
   });
 }
 
-// Actualizar una tarea por ID
-async function actualizarTarea(id, nuevosDatos) {
-  const tareas = await obtenerTareas();
-  const index = tareas.findIndex(t => t.id === id);
-  if (index === -1) return null;
-
-  tareas[index] = { ...tareas[index], ...nuevosDatos };
-  await fs.writeFile(rutaArchivo, JSON.stringify(tareas, null, 2));
-  return tareas[index];
+// Crear nueva tarea
+export async function crearTarea(req, res) {
+  try {
+    const nuevaTarea = new Tarea({
+      titulo: req.body.titulo,
+      descripcion: req.body.descripcion,
+      estado: req.body.estado || 'pendiente'
+    });
+    await nuevaTarea.save();
+    res.redirect('/tareas?mensajeExito=Tarea creada correctamente');
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Error al crear tarea');
+  }
 }
 
-// Eliminar una tarea por ID
-async function eliminarTarea(id) {
-  const tareas = await obtenerTareas();
-  const tareasFiltradas = tareas.filter(t => t.id !== id);
-  await fs.writeFile(rutaArchivo, JSON.stringify(tareasFiltradas, null, 2));
-  return tareasFiltradas.length < tareas.length;
+// Mostrar formulario de edición
+export async function editarTarea(req, res) {
+  try {
+    const tarea = await Tarea.findById(req.params.id);
+    if (!tarea) return res.status(404).send('Tarea no encontrada');
+    res.render('tareas/editar', { 
+      tarea,
+      hojaEstilo: 'tareas/editar'  
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Error al cargar tarea');
+  }
 }
 
-module.exports = {
+// Actualizar tarea
+export async function actualizarTarea(req, res) {
+  try {
+    await Tarea.findByIdAndUpdate(req.params.id, {
+      titulo: req.body.titulo,
+      descripcion: req.body.descripcion,
+      estado: req.body.estado
+    });
+    res.redirect('/tareas?mensajeExito=Tarea actualizada correctamente');
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Error al actualizar tarea');
+  }
+}
+
+// Eliminar tarea
+export async function eliminarTarea(req, res) {
+  try {
+    await Tarea.findByIdAndDelete(req.params.id);
+    res.redirect('/tareas?mensajeExito=Tarea eliminada correctamente');
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Error al eliminar tarea');
+  }
+}
+
+const tareasController = {
   obtenerTareas,
+  mostrarFormulario,
   crearTarea,
-  filtrarTareas,
+  editarTarea,
   actualizarTarea,
   eliminarTarea
 };
+
+export default tareasController;

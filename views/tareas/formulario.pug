@@ -1,0 +1,24 @@
+extends ../layout.pug
+
+block content
+  h1 #{tarea ? 'Editar tarea' : 'Crear nueva tarea'}
+
+  form(action=tarea ? `/tareas/actualizar/${tarea._id}` : '/tareas', method='POST' class='form-tarea')
+    div.form-group
+      label(for='titulo') Título
+      input(type='text', name='titulo', id='titulo', required value=tarea ? tarea.titulo : '')
+
+    div.form-group
+      label(for='descripcion') Descripción
+      textarea(name='descripcion', id='descripcion', rows='4', required)= tarea ? tarea.descripcion : ''
+
+    div.form-group
+      label(for='estado') Estado
+      select(name='estado', id='estado')
+        option(value='pendiente' selected=tarea && tarea.estado=='pendiente') Pendiente
+        option(value='en progreso' selected=tarea && tarea.estado=='en progreso') En progreso
+        option(value='completada' selected=tarea && tarea.estado=='completada') Completada
+
+    div.form-actions
+      button(type='submit' class='btn-guardar') Guardar
+      a(href='/tareas' class='btn-cancelar') Cancelar

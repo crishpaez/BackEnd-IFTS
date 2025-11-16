@@ -1,33 +1,22 @@
-import { readFile, writeFile } from 'fs/promises';
-import path from 'path';
-import { fileURLToPath } from 'url';
-import { generarId } from '../utils/idGenerator.js';
+import mongoose from 'mongoose';
 
-// Ruta del archivo JSON
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-const filePath = path.join(__dirname, '../data/roles.json');
-
-// Funcion para obtener todos los roles
-async function obtenerRoles() {
-  try {
-    const data = await readFile(filePath, 'utf-8');
-    return JSON.parse(data);
-  } catch {
-    return [];
+// Definimos el esquema de Rol
+const rolSchema = new mongoose.Schema({
+  nombre: {
+    type: String,
+    required: true,
+    trim: true
+  },
+  descripcion: {
+    type: String,
+    required: true,
+    trim: true
   }
-}
+}, {
+  timestamps: true // agrega createdAt y updatedAt automáticamente
+});
 
-//Reemplazar por funciones
-/* class Rol {
-  constructor({ id, nombre, descripcion }) {
-    this.id = id;
-    this.nombre = nombre;
-    this.descripcion = descripcion;
-  }
-}
+// Creamos el modelo
+const Rol = mongoose.model('Rol', rolSchema);
 
-module.exports = Rol; */
-
-const rolModelo = { obtenerRoles };
-export default rolModelo;
+export default Rol;

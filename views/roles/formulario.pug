@@ -1,0 +1,17 @@
+extends ../layout.pug
+
+block content
+  h1 Crear nuevo rol
+
+  form(action='/roles', method='POST' class='form-rol')
+    div.form-group
+      label(for='nombre') Nombre del rol
+      input(type='text', name='nombre', id='nombre', required)
+
+    div.form-group
+      label(for='descripcion') Descripción
+      textarea(name='descripcion', id='descripcion', rows='4', required)
+
+    div.form-actions
+      button(type='submit' class='btn-crear') Guardar rol
+      a(href='/roles' class='btn-cancelar') Cancelar

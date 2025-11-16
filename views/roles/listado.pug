@@ -1,17 +1,31 @@
-doctype html
-html
-  head
-    title Listado de Roles
-  body
-    h1 Roles registrados
+extends ../layout.pug
 
-    if roles.length
-      ul
+block content
+  h1 Roles registrados
+
+  if mensajeExito
+    script.
+      alert("#{mensajeExito}")
+
+  if roles.length
+    table
+      thead
+        tr
+          th ID
+          th Nombre
+          th Descripción
+          th Acciones
+      tbody
         each rol in roles
-          li
-            p ID: #{rol.id}
-            p Nombre: #{rol.nombre}
-            p Descripción: #{rol.descripcion}
-            hr
-    else
-      p No hay roles registrados.
+          tr
+            td #{rol._id}   // si usás Mongo, el ID es _id
+            td #{rol.nombre}
+            td #{rol.descripcion}
+            td
+              form(action=`/roles/eliminar/${rol._id}?_method=DELETE`, method='POST', style='display:inline')
+                button(type='submit', onclick='return confirm("¿Eliminar este rol?")') Eliminar
+  else
+    p No hay roles registrados.
+
+  form(action='/roles/nuevo', method='GET')
+    button(type='submit' class='agregar-btn') Crear nuevo rol
