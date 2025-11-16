@@ -14,6 +14,9 @@ import tareasRoutes from './routes/tareasRoutes.js'; */
 
 const app = express();
 
+app.use('/styles', express.static(path.join(__dirname, 'styles')));
+
+
 // Configuración de __dirname
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -26,7 +29,6 @@ app.use(methodOverride('_method'));
 // Configuración de vistas (Pug)
 app.set('view engine', 'pug');
 app.set('views', path.join(__dirname, 'views'));
-app.use('/styles', express.static(path.join(__dirname, 'styles')));
 
 // Conectar Mongo antes de montar rutas
 await connectDB();

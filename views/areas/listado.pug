@@ -8,19 +8,26 @@ block content
       alert("#{mensajeExito}")
 
   if areas.length
-    ul
-      each area in areas
-        li
-          p ID: #{area.id}
-          p Nombre: #{area.nombre}
-          p Descripción: #{area.descripcion}
-          form(action=`/areas/editar/${area.id}`, method='GET')
-            button(type='submit') Editar
-          form(action=`/areas/eliminar/${area.id}?_method=DELETE`, method='POST')
-            button(type='submit', onclick='return confirm("¿Eliminar esta área?")') Eliminar
-          hr
+    table
+      thead
+        tr
+          th ID
+          th Nombre
+          th Descripción
+          th Acciones
+      tbody
+        each area in areas
+          tr
+            td #{area.id}
+            td #{area.nombre}
+            td #{area.descripcion}
+            td
+              form(action=`/areas/editar/${area.id}`, method='GET', style='display:inline')
+                button(type='submit') Editar
+              form(action=`/areas/eliminar/${area.id}?_method=DELETE`, method='POST', style='display:inline')
+                button(type='submit', onclick='return confirm("¿Eliminar esta área?")') Eliminar
   else
     p No hay áreas registradas.
 
   form(action='/areas/nueva', method='GET')
-    button(type='submit') Agregar nueva área
+    button(type='submit' class='agregar-btn') Agregar nueva área

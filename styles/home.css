@@ -1,0 +1,49 @@
+@import url('./layout.css');
+
+/* Fondo especial para la portada */
+body {
+  background: linear-gradient(135deg, #f0f8ff, #ffffff);
+}
+
+/* Contenedor principal */
+main {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 70vh;
+  text-align: center;
+}
+
+/* Título de bienvenida */
+main h2 {
+  font-size: 3rem;
+  color: #0077cc;
+  margin-bottom: 1rem;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+}
+
+/* Texto descriptivo */
+main p {
+  font-size: 1.4rem;
+  color: #333;
+  max-width: 600px;
+  line-height: 1.6;
+  background-color: #e6f2ff;
+  padding: 1rem 2rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+
+/* Animación de entrada */
+main h2, main p {
+  animation: fadeIn 1.2s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
