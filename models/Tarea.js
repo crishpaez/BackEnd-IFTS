@@ -1,11 +1,10 @@
 import mongoose from 'mongoose';
 
 const tareaSchema = new mongoose.Schema({
-  titulo: { type: String, required: true, trim: true },
-  descripcion: { type: String, required: true, trim: true },
-  estado: { type: String, enum: ['pendiente', 'en progreso', 'completada'], default: 'pendiente' }
-}, { timestamps: true });
+  id: { type: Number, required: true, unique: true }, 
+  titulo: { type: String, required: true },
+  descripcion: { type: String },
+  estado: { type: String, default: 'pendiente' }
+});
 
-const Tarea = mongoose.model('Tarea', tareaSchema);
-
-export default Tarea;
+export default mongoose.model('Tarea', tareaSchema);

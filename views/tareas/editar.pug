@@ -6,7 +6,7 @@ block content
   if !tarea
     p No se encontró la tarea.
   else
-    form(action=`/tareas/actualizar/${tarea._id}`, method='POST' class='form-tarea')
+    form(action=`/tareas/actualizar/${tarea.id}`, method='POST' class='form-tarea')
       div.form-group
         label(for='titulo') Título
         input(type='text', name='titulo', id='titulo', required value=tarea.titulo)

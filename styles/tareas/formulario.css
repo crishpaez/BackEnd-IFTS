@@ -1,17 +1,15 @@
 @import url('../layout.css');
 
-/* Contenedor del formulario (crear/editar) */
 .form-tarea {
   width: 60%;
   margin: 2rem auto;
   padding: 2rem;
   background-color: #f9f9f9;
-  border: 1px solid #ccc; /* Marco visible */
+  border: 1px solid #ccc;
   border-radius: 8px;
   box-shadow: 0 2px 6px rgba(0,0,0,0.1);
 }
 
-/* Grupos de campos */
 .form-group {
   margin-bottom: 1.2rem;
 }
@@ -41,16 +39,14 @@ select:focus {
   box-shadow: 0 0 4px rgba(0,119,204,0.4);
 }
 
-/* Acciones del formulario */
 .form-actions {
   display: flex;
   justify-content: flex-end;
   gap: 1rem;
 }
 
-/* Botón guardar */
 .btn-guardar {
-  background-color: #28a745;
+  background-color: #0077cc;
   color: #fff;
   border: none;
   padding: 0.6rem 1.2rem;
@@ -60,12 +56,11 @@ select:focus {
 }
 
 .btn-guardar:hover {
-  background-color: #218838;
+  background-color: #005b96;
 }
 
-/* Botón cancelar */
 .btn-cancelar {
-  background-color: #dc3545;
+  background-color: #005b96;
   color: #fff;
   text-decoration: none;
   padding: 0.6rem 1.2rem;
@@ -74,5 +69,5 @@ select:focus {
 }
 
 .btn-cancelar:hover {
-  background-color: #c82333;
+  background-color: #005b96;
 }

@@ -1,15 +1,20 @@
 extends ../layout.pug
 
 block content
-  h1= titulo
+  .detalle-rol
+    h2 Detalle del Rol
 
-  p
-    strong Nombre: 
-    | #{rol.nombre}
+    p
+      span ID: 
+      | #{rol.id}
 
-  p
-    strong Descripción: 
-    | #{rol.descripcion}
+    p
+      span Nombre: 
+      | #{rol.nombre}
 
-  br
-  a(href='/roles') Volver al listado
+    p
+      span Descripción: 
+      | #{rol.descripcion}
+
+    .detalle-acciones
+      a(href='/roles' class='btn-volver') Volver

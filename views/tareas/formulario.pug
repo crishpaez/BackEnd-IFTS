@@ -3,7 +3,7 @@ extends ../layout.pug
 block content
   h1 #{tarea ? 'Editar tarea' : 'Crear nueva tarea'}
 
-  form(action=tarea ? `/tareas/actualizar/${tarea._id}` : '/tareas', method='POST' class='form-tarea')
+  form(action=tarea ? `/tareas/actualizar/${tarea.id}` : '/tareas', method='POST' class='form-tarea')
     div.form-group
       label(for='titulo') Título
       input(type='text', name='titulo', id='titulo', required value=tarea ? tarea.titulo : '')

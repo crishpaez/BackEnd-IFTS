@@ -4,7 +4,9 @@ import { obtenerTareas, mostrarFormulario, crearTarea, editarTarea, actualizarTa
 const router = express.Router();
 
 router.get('/', obtenerTareas);
-router.get('/nuevo', mostrarFormulario);
+router.get('/nuevo', (req, res) => {
+  res.render('tareas/formulario', { hojaEstilo: 'tareas/formulario', tarea: null });
+});
 router.post('/', crearTarea);
 router.get('/editar/:id', editarTarea);
 router.post('/actualizar/:id', actualizarTarea);

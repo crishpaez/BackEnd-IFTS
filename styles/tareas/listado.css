@@ -20,14 +20,14 @@ th, td {
 }
 
 tbody tr:nth-child(even) {
-  background-color: #f2f2f2;
+  background-color: #f9f9f9;
 }
 
 tbody tr:hover {
   background-color: #e6f2ff;
 }
 
-button {
+.btn-accion {
   background-color: #0077cc;
   color: #fff;
   border: none;
@@ -35,16 +35,19 @@ button {
   border-radius: 4px;
   cursor: pointer;
   font-size: 0.9rem;
+  margin-right: 0.3rem;
+  text-decoration: none;
+  display: inline-block;
 }
 
-button:hover {
+.btn-accion:hover {
   background-color: #005b96;
 }
 
 .agregar-btn {
   display: block;
   margin: 2rem auto;
-  background-color: #28a745;
+  background-color: #005b96;
   padding: 0.6rem 1.2rem;
   font-size: 1rem;
   color: #fff;
@@ -54,5 +57,5 @@ button:hover {
 }
 
 .agregar-btn:hover {
-  background-color: #218838;
+  background-color: #005b96;
 }
