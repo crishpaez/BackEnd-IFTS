@@ -1,22 +1,17 @@
-import mongoose from 'mongoose';
+// models/Rol.js
+const rolesPredefinidos = [
+  { id: 1, nombre: 'Administrativo', descripcion: 'Gestiona documentación, trámites y soporte administrativo.' },
+  { id: 2, nombre: 'Operario', descripcion: 'Realiza tareas operativas y de producción en planta.' },
+  { id: 3, nombre: 'Chofer', descripcion: 'Conduce vehículos y se encarga de la logística de transporte.' }
+];
 
-// Definimos el esquema de Rol
-const rolSchema = new mongoose.Schema({
-  nombre: {
-    type: String,
-    required: true,
-    trim: true
-  },
-  descripcion: {
-    type: String,
-    required: true,
-    trim: true
-  }
-}, {
-  timestamps: true // agrega createdAt y updatedAt automáticamente
-});
+export async function obtenerRoles() {
+  return rolesPredefinidos;
+}
 
-// Creamos el modelo
-const Rol = mongoose.model('Rol', rolSchema);
+export async function obtenerRolPorId(id) {
+  return rolesPredefinidos.find(r => r.id === Number(id));
+}
 
-export default Rol;
+const rolModelo = { obtenerRoles, obtenerRolPorId };
+export default rolModelo;

@@ -1,0 +1,15 @@
+extends ../layout.pug
+
+block content
+  h1= titulo
+
+  p
+    strong Nombre: 
+    | #{rol.nombre}
+
+  p
+    strong Descripción: 
+    | #{rol.descripcion}
+
+  br
+  a(href='/roles') Volver al listado

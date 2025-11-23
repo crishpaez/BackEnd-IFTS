@@ -1,18 +1,13 @@
+// routes/rolesRoutes.js
 import express from 'express';
-import { obtenerRoles, mostrarFormulario, crearRol, eliminarRol } from '../controllers/rolesController.js';
+import rolesController from '../controllers/rolesController.js';
 
 const router = express.Router();
 
 // Listar roles
-router.get('/', obtenerRoles);
+router.get('/', rolesController.mostrarRoles);
 
-// Mostrar formulario de creación
-router.get('/nuevo', mostrarFormulario);
-
-// Crear rol
-router.post('/', crearRol);
-
-// Eliminar rol
-router.post('/eliminar/:id', eliminarRol);
+// Ver detalle de un rol
+router.get('/:id', rolesController.detalleRol);
 
 export default router;

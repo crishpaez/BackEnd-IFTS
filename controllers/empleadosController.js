@@ -26,36 +26,6 @@ async function mostrarEmpleados(req, res) {
   }
 }
 
-// Mostrar empleado por ID
-async function mostrarEmpleadoPorId(req, res) {
-  try {
-    const id = parseInt(req.params.id);
-    if (isNaN(id)) {
-      return responder(req, res, 400, 'ID inválido', null, '/empleados');
-    }
-
-    const empleado = await empleadoModelo.obtenerEmpleadoPorId(id);
-    if (!empleado) {
-      console.warn(`Empleado con ID ${id} no encontrado`);
-      return responder(req, res, 404, 'Empleado no encontrado', null, '/empleados');
-    }
-
-    const esJson = req.query.formato === 'json';
-    if (esJson) {
-      return responder(req, res, 200, 'Empleado encontrado correctamente', empleado);
-    }
-
-    res.render('empleados/ver', {
-      titulo: 'Detalle del Empleado',
-      empleado,
-      hojaEstilo: 'empleados/ver'
-    });
-  } catch (error) {
-    console.error('Error al buscar empleado por ID:', error);
-    return responder(req, res, 500, 'Error interno al buscar empleado', null, '/empleados');
-  }
-}
-
 // Formulario para crear nuevo empleado
 async function formularioNuevoEmpleado(req, res) {
   try {
@@ -84,11 +54,9 @@ async function guardarEmpleado(req, res) {
       return responder(req, res, 400, 'Nombre, apellido, rol y área son requeridos', null, '/empleados');
     }
 
-    if (activo !== 'true' && activo !== 'false') {
-      return responder(req, res, 400, 'El estado activo/inactivo es inválido', null, '/empleados');
-    }
+    const activoBool = activo === 'true'; // convertir a booleano
+    const nuevoEmpleado = await empleadoModelo.agregarEmpleado(nombre, apellido, rol, area, activoBool);
 
-    const nuevoEmpleado = await empleadoModelo.agregarEmpleado(nombre, apellido, rol, area, activo);
     return responder(req, res, 201, 'Empleado creado exitosamente', nuevoEmpleado, '/empleados');
   } catch (error) {
     console.error('Error al guardar empleado:', error);
@@ -104,7 +72,7 @@ async function formularioEditarEmpleado(req, res) {
     const roles = await rolModelo.obtenerRoles();
     const areas = await areaModelo.obtenerAreas();
 
-    const empleado = empleados.find(a => a.id === id);
+    const empleado = empleados.find(e => e.id === id);
     if (!empleado) return res.status(404).send('Empleado no encontrado');
 
     res.render('empleados/editar', {
@@ -155,26 +123,13 @@ async function eliminarEmpleado(req, res) {
   }
 }
 
-// Eliminar todos los empleados
-async function eliminarTodosLosEmpleados(req, res) {
-  try {
-    await empleadoModelo.eliminarTodasLosEmpleados();
-    return responder(req, res, 200, 'Todos los empleados fueron eliminados correctamente', null, '/empleados');
-  } catch (error) {
-    console.error('Error al eliminar todos los empleados:', error);
-    return responder(req, res, 500, 'Error interno al eliminar todos los empleados', null, '/empleados');
-  }
-}
-
 const empleadosController = {
   mostrarEmpleados,
-  mostrarEmpleadoPorId,
-  guardarEmpleado,
   formularioNuevoEmpleado,
+  guardarEmpleado,
   formularioEditarEmpleado,
   actualizarEmpleado,
-  eliminarEmpleado,
-  eliminarTodosLosEmpleados
+  eliminarEmpleado
 };
 
 export default empleadosController;

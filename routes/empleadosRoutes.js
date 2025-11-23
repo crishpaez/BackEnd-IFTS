@@ -10,7 +10,5 @@ router.post('/nuevo', empleadosController.guardarEmpleado);
 router.get('/editar/:id', empleadosController.formularioEditarEmpleado);
 router.put('/editar/:id', empleadosController.actualizarEmpleado);
 router.delete('/eliminar/:id', empleadosController.eliminarEmpleado);
-router.get('/:id', empleadosController.mostrarEmpleadoPorId); 
-router.delete('/eliminar-todos', empleadosController.eliminarTodosLosEmpleados);
 
 export default router;

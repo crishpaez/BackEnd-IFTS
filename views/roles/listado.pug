@@ -1,31 +1,19 @@
 extends ../layout.pug
 
 block content
-  h1 Roles registrados
+  h1 Lista de Roles
 
-  if mensajeExito
-    script.
-      alert("#{mensajeExito}")
-
-  if roles.length
-    table
-      thead
+  table(border='1', cellpadding='8', cellspacing='0', style='width: 100%; border-collapse: collapse')
+    thead
+      tr
+        th ID
+        th Nombre
+        th Acciones
+    tbody
+      each rol in roles
         tr
-          th ID
-          th Nombre
-          th Descripción
-          th Acciones
-      tbody
-        each rol in roles
-          tr
-            td #{rol._id}   // si usás Mongo, el ID es _id
-            td #{rol.nombre}
-            td #{rol.descripcion}
-            td
-              form(action=`/roles/eliminar/${rol._id}?_method=DELETE`, method='POST', style='display:inline')
-                button(type='submit', onclick='return confirm("¿Eliminar este rol?")') Eliminar
-  else
-    p No hay roles registrados.
-
-  form(action='/roles/nuevo', method='GET')
-    button(type='submit' class='agregar-btn') Crear nuevo rol
+          td= rol.id
+          td= rol.nombre
+          td
+            form(action=`/roles/${rol.id}`, method='GET', style='display:inline')
+              button(type='submit') Ver detalle

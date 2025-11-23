@@ -7,7 +7,7 @@ block content
     div
       label(for='nombre') Nombre
       br
-      input(type='text', name='nombre', id='nombre', required, value=empleado.nombre || '', style='width: 700px')
+      input(type='text', name='nombre', id='nombre', required, value=(empleado.nombre || ''), style='width: 700px')
 
     br
     br
@@ -15,7 +15,7 @@ block content
     div
       label(for='apellido') Apellido
       br
-      input(type='text', name='apellido', id='apellido', required, value=empleado.apellido || '', style='width: 700px')
+      input(type='text', name='apellido', id='apellido', required, value=(empleado.apellido || ''), style='width: 700px')
 
     br
     br
@@ -25,7 +25,7 @@ block content
       br
       select(name='rol', id='rol', required, style='width: 700px')
         each r in roles
-          option(value=r.nombre selected=(r.nombre === empleado.rol))= r.nombre
+          option(value=r.nombre, selected=(r.nombre === empleado.rol))= r.nombre
 
     br
     br
@@ -35,7 +35,7 @@ block content
       br
       select(name='area', id='area', required, style='width: 700px')
         each a in areas
-          option(value=a.nombre selected=(a.nombre === empleado.area))= a.nombre
+          option(value=a.nombre, selected=(a.nombre === empleado.area))= a.nombre
 
     br
     br
@@ -44,8 +44,8 @@ block content
       label(for='activo') Estado
       br
       select(name='activo', id='activo', required, style='width: 700px')
-        option(value='true', selected=empleado.activo === true) Activo
-        option(value='false', selected=empleado.activo === false) Inactivo
+        option(value='true', selected=(empleado.activo === true)) Activo
+        option(value='false', selected=(empleado.activo === false)) Inactivo
 
     br
     br

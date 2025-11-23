@@ -16,36 +16,25 @@ const EmpleadoSchema = new mongoose.Schema(
 const EmpleadoModel =
   mongoose.models.Empleado || mongoose.model('Empleado', EmpleadoSchema);
 
+// Generador de ID incremental
 async function nextId() {
   const last = await EmpleadoModel.findOne().sort({ id: -1 }).lean();
   return last?.id ? last.id + 1 : 1;
 }
 
-// === API igual a la que usan tus controladores ===
+// === API usada por los controladores ===
+
+// Listar todos los empleados
 export async function obtenerEmpleados() {
   return await EmpleadoModel.find().sort({ id: 1 }).lean();
 }
 
+// Buscar empleado por ID
 export async function obtenerEmpleadoPorId(id) {
   return await EmpleadoModel.findOne({ id: Number(id) }).lean();
 }
 
-export async function guardarEmpleados(empleados) {
-  await EmpleadoModel.deleteMany({});
-  if (Array.isArray(empleados) && empleados.length) {
-    await EmpleadoModel.insertMany(
-      empleados.map(e => ({
-        id: e.id,
-        nombre: e.nombre,
-        apellido: e.apellido,
-        rol: e.rol,
-        area: e.area,
-        activo: !!e.activo,
-      }))
-    );
-  }
-}
-
+// Crear nuevo empleado
 export async function agregarEmpleado(nombre, apellido, rol, area, activo) {
   const id = await nextId();
   const doc = await EmpleadoModel.create({
@@ -66,6 +55,7 @@ export async function agregarEmpleado(nombre, apellido, rol, area, activo) {
   };
 }
 
+// Actualizar empleado por ID
 export async function actualizarEmpleadoPorId(id, nuevosDatos) {
   const payload = { ...nuevosDatos };
   if ('activo' in payload) payload.activo = String(payload.activo) === 'true';
@@ -78,23 +68,19 @@ export async function actualizarEmpleadoPorId(id, nuevosDatos) {
   return updated;
 }
 
+// Eliminar empleado por ID
 export async function eliminarEmpleadoPorId(id) {
   const deleted = await EmpleadoModel.findOneAndDelete({ id: Number(id) }).lean();
   return deleted;
 }
 
-export async function eliminarTodasLosEmpleados() {
-  await EmpleadoModel.deleteMany({});
-}
-
+// Exportar API simplificada
 const empleadoModelo = {
   obtenerEmpleados,
   obtenerEmpleadoPorId,
-  guardarEmpleados,
   agregarEmpleado,
   actualizarEmpleadoPorId,
   eliminarEmpleadoPorId,
-  eliminarTodasLosEmpleados,
 };
 
 export default empleadoModelo;

@@ -10,14 +10,5 @@ router.get('/', (req, res) => {
   });
 });
 
-
-router.get('/test', (req, res) => {
-  res.render('home', {
-    titulo: 'Prueba de estilos',
-    hojaEstilo: 'test'
-  });
-});
-
-
 export default router;
 
