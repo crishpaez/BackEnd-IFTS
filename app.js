@@ -3,20 +3,23 @@ import mongoose from 'mongoose';
 import methodOverride from 'method-override';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import dotenv from 'dotenv';
+dotenv.config();
 
 // Importar rutas
+import indexRoutes from './routes/indexRoutes.js';
 import areasRoutes from './routes/areasRoutes.js';
 import empleadosRoutes from './routes/empleadosRoutes.js';
 import rolesRoutes from './routes/rolesRoutes.js';
-
-// Importar modelo de roles para inicialización
-import rolModelo from './models/Rol.js';
+import tareasRoutes from './routes/tareasRoutes.js';
 
 const app = express();
 
 // Configuración de paths
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+
+app.use('/styles', express.static(path.join(__dirname, 'styles')));
 
 // Middlewares
 app.use(express.urlencoded({ extended: true }));
@@ -28,36 +31,27 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
 
-// Conexión a MongoDB
-const uri = 'mongodb+srv://Proyecto:BackEnd@cluster0.j35ltw9.mongodb.net/';
-
-mongoose.connect(uri)
-  .then(async () => {
-    console.log('Conectado a MongoDB Atlas');
-    await inicializarRoles(); // carga automática de roles
-  })
-  .catch(err => console.error('Error de conexión a MongoDB Atlas:', err));
-
-
-// Inicialización automática de roles fijos
-async function inicializarRoles() {
-  const roles = await rolModelo.obtenerRoles();
-  if (roles.length === 0) {
-    await rolModelo.agregarRol('Administrativo', 'Gestiona documentación, trámites y soporte administrativo.');
-    await rolModelo.agregarRol('Operario', 'Realiza tareas operativas y de producción en planta.');
-    await rolModelo.agregarRol('Chofer', 'Conduce vehículos y se encarga de la logística de transporte.');
-    console.log('Roles iniciales cargados automáticamente');
-  }
+// Conexión a MongoDB Atlas
+const uri = process.env.MONGODB_URI;
+if (!uri) {
+  console.error('No se encontró la variable MONGODB_URI en .env');
+  process.exit(1);
 }
 
+mongoose.connect(uri)
+  .then(() => console.log('Conectado a MongoDB Atlas'))
+  .catch(err => console.error('Error de conexión a MongoDB Atlas:', err));
+
 // Rutas
+app.use('/', indexRoutes);
 app.use('/areas', areasRoutes);
 app.use('/empleados', empleadosRoutes);
 app.use('/roles', rolesRoutes);
+app.use('/tareas', tareasRoutes);
 
 // Ruta raíz
 app.get('/', (req, res) => {
-  res.render('index', { titulo: 'Inicio', hojaEstilo: 'index' });
+  res.render('home', { titulo: 'Inicio', hojaEstilo: 'home' });
 });
 
 // Servidor

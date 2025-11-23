@@ -2,7 +2,7 @@ import express from 'express';
 
 const router = express.Router();
 
-// Vistas
+// Ruta de inicio
 router.get('/', (req, res) => {
   res.render('home', {
     titulo: 'Inicio',
@@ -11,4 +11,3 @@ router.get('/', (req, res) => {
 });
 
 export default router;
-
