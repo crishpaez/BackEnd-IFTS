@@ -228,4 +228,3 @@ Participación de los 3 integrantes
 | **Silvana Fernández** | Diseño UI, vistas Pug, estructura inicial, manejo de errores                  |
 | **Cristian Paez**     | Controladores y rutas de áreas, datos JSON iniciales, migraciones             |
 | **Dante Serruto**     | Migración a ES Modules, MongoDB Atlas, controladores empleados, documentación |
-| --------------------- | ----------------------------------------------------------------------------- |
