@@ -1,36 +1,39 @@
-🧩 WebFix – Sistema de Gestión Logística (LogiFlow)
-Proyecto Final – Desarrollo Web Backend
-Grupo 8 – Silvana Fernández | Cristian Paez | Dante Serruto
+🌐 WebFix – Sistema de Gestión Logística (LogiFlow)
+🧩 Proyecto Final – Desarrollo Web Backend (IFTS)
+👥 Grupo 8 – Silvana Fernández | Cristian Paez | Dante Serruto
 📌 Descripción del Proyecto
 
-LogiFlow es una empresa dedicada al transporte y almacenamiento de mercaderías.
-Nuestro proyecto consiste en un sistema de gestión interno que optimiza la administración de:
+LogiFlow es una aplicación web destinada a digitalizar y optimizar la gestión interna de una empresa logística.
+El sistema implementa:
 
-Áreas operativas
+📁 Gestión de Áreas operativas
 
-Empleados
+👥 Gestión de Empleados
 
-Roles
+🔐 Gestión de Roles
 
-Tareas
+📝 Gestión de Tareas
 
-El objetivo fue mejorar la versión inicial del sistema, reemplazando el almacenamiento en archivos JSON por una base de datos MongoDB Atlas, estructurando el backend bajo el modelo MVC, agregando vistas Pug mejoradas, estilos CSS organizados y realizando pruebas (Thunder Client) para validar las funcionalidades.
+El proyecto comenzó usando archivos JSON, pero fue mejorado para:
+
+✔ Migrar completamente a MongoDB Atlas
+✔ Aplicar arquitectura MVC
+✔ Implementar vistas con Pug
+✔ Modularizar estilos en CSS
+✔ Realizar pruebas con Thunder Client
+✔ Documentar el desarrollo e integrar prácticas de Ingeniería de Software
 
 🚀 Tecnologías Utilizadas
-
-Node.js
-
-Express.js
-
-MongoDB Atlas + Mongoose
-
-Pug (motor de vistas)
-
-CSS modularizado
-
-Thunder Client (pruebas)
-
-dotenv (variables de entorno)
+| Tecnología           | Uso                  |
+| -------------------- | -------------------- |
+| **Node.js**          | Backend / servidor   |
+| **Express.js**       | Routing, middlewares |
+| **MongoDB Atlas**    | Base de datos        |
+| **Mongoose**         | Modelado de datos    |
+| **Pug**              | Motor de vistas      |
+| **CSS modularizado** | Diseño               |
+| **dotenv**           | Variables de entorno |
+| **Thunder Client**   | Pruebas HTTP         |
 
 📂 Estructura del Proyecto (MVC)
 BackEnd-IFTS/
@@ -62,20 +65,21 @@ BackEnd-IFTS/
 ├── styles/
 │   ├── layout.css
 │   ├── home.css
-│   ├── empleados/...
-│   ├── areas/...
-│   ├── roles/...
-│   └── tareas/...
+│   ├── empleados/
+│   ├── areas/
+│   ├── roles/
+│   └── tareas/
 │
 └── views/
     ├── layout.pug
     ├── home.pug
-    ├── empleados/...
-    ├── areas/...
-    ├── roles/...
-    └── tareas/...
+    ├── empleados/
+    ├── areas/
+    ├── roles/
+    └── tareas/
 
 ⚙️ Instalación y Configuración
+
 1️⃣ Clonar el repositorio
 git clone https://github.com/crishpaez/BackEnd-IFTS.git
 cd BackEnd-IFTS
@@ -83,152 +87,147 @@ cd BackEnd-IFTS
 2️⃣ Instalar dependencias
 npm install
 
-3️⃣ Configurar variables de entorno
-
-Crear un archivo .env en la raíz:
-
+3️⃣ Crear archivo .env
 MONGODB_URI=mongodb+srv://<USUARIO>:<PASSWORD>@<CLUSTER>.mongodb.net/logiflow
 PORT=3001
 
+⚠️ El usuario debe existir en Database Access en MongoDB Atlas.
 
-⚠️ El usuario debe estar creado en Database Access de MongoDB Atlas.
-
-4️⃣ Levantar el servidor
+4️⃣ Ejecutar el servidor
 
 Modo desarrollo:
-
 npm run dev
 
-
 Modo producción:
-
 npm start
 
 📌 Funcionalidades
 🟦 Módulo Áreas
 
-Crear / Listar / Editar / Eliminar áreas
+Crear / Editar / Listar / Eliminar
 
-Manejo vía vistas Pug y vía JSON
+Formularios con validaciones
 
-Validaciones en formularios
-
-Actualización dinámica en Empleados
+Vista Pug + JSON/Thunder Client
 
 🟩 Módulo Empleados
 
-Alta, edición, eliminación
+CRUD completo
 
-Selección dinámica de rol, área y estado
+Rol / Área dinámicos
 
-Validación de campos obligatorios
+Estado (activo/inactivo)
 
-IDs numéricos secuenciales
+ID numérico secuencial
 
 🟨 Módulo Roles
 
-Listado y detalle de roles
+Listado
 
-Integrado en la carga de empleados
+Vista de detalle
+
+Integración con empleados
 
 🟥 Módulo Tareas
 
-Sistema migrado totalmente a MongoDB
+CRUD completo con MongoDB
 
-IDs numéricos propios (no ObjectId)
+ID numérico propio (no ObjectId)
 
-CRUD completo
+Vistas con CSS modular
 
-Vistas mejoradas con CSS modular
+🧪 Pruebas Realizadas (Thunder Client)
 
-🧪 Pruebas (Thunder Client)
+Se probaron las operaciones:
 
-Se realizaron pruebas para:
+✔ GET /areas — Listado
+✔ POST /areas — Crear área
+✔ PUT /areas/editar/:id — Editar
+✔ DELETE /areas/eliminar/:id — Eliminar
 
-✔ Obtener todas las áreas
-✔ Crear nuevas áreas
-✔ Modificar áreas existentes
-✔ Eliminar áreas y empleados
-✔ Crear, editar y eliminar tareas con MongoDB
-✔ Peticiones GET/POST/PUT/DELETE con ?formato=json
+✔ GET /empleados
+✔ POST /empleados/nuevo
+✔ PUT /empleados/editar/:id
+✔ DELETE /empleados/eliminar/:id
 
-Todas las capturas están documentadas en el PDF de la entrega final.
+✔ CRUD de tareas vía MongoDB
+✔ Manejo de ?formato=json
+✔ Validaciones y casos de error
 
+📄 Todas las capturas se encuentran incluidas en el PDF de documentación.
+Archivo: “G8 - WebFix - Documentación.pdf” 
 
 G8 - Webfix - Documentación (1)
 
-🔐 Variables de Entorno y Seguridad
+🔐 Seguridad y Variables de Entorno
 
-El proyecto utiliza dotenv
+Se usa dotenv para la conexión Atlas.
 
-La URI de Atlas NUNCA debe publicarse en el repo
+La cadena MongoDB NO debe publicarse en el repositorio.
 
-No se utilizaron sistemas de autenticación (JWT o Passport)
-→ Se explica en la documentación por qué no era requerido según el alcance original.
+No se implementó JWT por no ser requerido para el sistema (explicado en documentación).
 
-🛠️ Mejoras Implementadas (versión final)
+🛠️ Mejoras Implementadas
 
 Migración completa de JSON → MongoDB Atlas
 
-Conversión total del proyecto a ES Modules (import/export)
+Conversión a ES Modules
 
-Separación de controladores, rutas y modelos
+Limpieza y modularización del backend
 
-Manejo de errores centralizado
+Estilos CSS específicos por módulo
 
-Validación de formularios y alertas visuales
+Manejo de errores mejorado
 
-Estructura de carpetas limpia (MVC + styles + views)
+Alertas y validaciones en formularios
 
-Estilos CSS individuales por módulo
+Nuevas vistas (detalle roles, tareas)
 
-Optimización de rutas, controladores y vistas
-
-Creación de vistas nuevas (Tareas, Roles Detalle, etc.)
-
-Manejo de IDs numéricos coherentes en todas las entidades
+IDs numéricos consistentes en todas las entidades
 
 📘 Documentación del Proyecto
 
-La documentación completa (PDF) contiene:
-
-Introducción
+Incluye:
 
 Objetivos generales y específicos
 
+Funcionalidades del sistema
+
+Diagramas y pruebas
+
 Roles del equipo
 
-Funcionamiento del sistema
+Mejoras incorporadas
 
-Diagramas
+Conclusiones y dificultades
 
-Pruebas en Thunder Client
+Uso de IA
 
-Mejoras y dificultades
+Bibliografía
 
-Conclusiones finales
+Documento incluido en la entrega
+📄 G8 - WebFix - Documentación.pdf 
 
-📄 Documento entregado:
-"G8 - WebFix - Documentación.pdf"
+G8 - Webfix - Documentación (1)
 
-🎥 Video / Defensa
+🎥 Video de Defensa (a completar)
 
 El video debe incluir:
 
-Explicación de controladores y rutas
+Explicación técnica del backend
 
-Demostración de CRUD en todos los módulos
+Demostración de CRUD
 
-Pruebas de fallos y validaciones
+Validaciones + errores controlados
 
-Explicación del uso de Mongo Atlas
+Explicación MongoDB Atlas
 
-Participación de los 3 integrantes (obligatorio)
+Participación de los 3 integrantes
 
-🧑‍💻 Autores
-
-Silvana Fernández – Diseño de vistas, estructura inicial, manejo de errores
-
-Cristian Paez – Rutas, controladores de áreas, JSON inicial, migraciones
-
-Dante Serruto – Migración a módulos ES, MongoDB, controladores empleados, documentación
+👥 Autores
+| Integrante            | Aportes                                                                       |
+| --------------------- | ----------------------------------------------------------------------------- |
+| **Silvana Fernández** | Diseño UI, vistas Pug, estructura inicial, manejo de errores                  |
+| **Cristian Paez**     | Controladores y rutas de áreas, datos JSON iniciales, migraciones             |
+| **Dante Serruto**     | Migración a ES Modules, MongoDB Atlas, controladores empleados, documentación |
+| --------------------- | ----------------------------------------------------------------------------- |
