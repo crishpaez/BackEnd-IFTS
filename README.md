@@ -206,11 +206,9 @@ Uso de IA
 Bibliografía
 
 Documento incluido en la entrega
-📄 G8 - WebFix - Documentación.pdf 
+📄 PROYECTO LogiFlow.pdf 
 
-G8 - Webfix - Documentación (1)
-
-🎥 Video de Defensa (a completar)
+🎥 Video de Defensa
 
 El video debe incluir:
 
