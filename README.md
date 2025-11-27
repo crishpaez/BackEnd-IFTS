@@ -10,7 +10,7 @@ El sistema implementa:
 
 👥 Gestión de Empleados
 
-🔐 Gestión de Roles
+🔐 Gestión de Roles (precargados, sin CRUD)
 
 📝 Gestión de Tareas
 
@@ -52,7 +52,7 @@ BackEnd-IFTS/
 ├── models/
 │   ├── Area.js
 │   ├── Empleado.js
-│   ├── Rol.js
+│   ├── Rol.js        ← precargado (sin CRUD)
 │   └── Tarea.js
 │
 ├── routes/
@@ -78,6 +78,7 @@ BackEnd-IFTS/
     ├── roles/
     └── tareas/
 
+
 ⚙️ Instalación y Configuración
 
 1️⃣ Clonar el repositorio
@@ -88,7 +89,7 @@ cd BackEnd-IFTS
 npm install
 
 3️⃣ Crear archivo .env
-MONGODB_URI=mongodb+srv://<USUARIO>:<PASSWORD>@<CLUSTER>.mongodb.net/logiflow
+MONGODB_URI="mongodb+srv://Proyecto:BackEnd@cluster0.j35ltw9.mongodb.net/BackendIFTS?retryWrites=true&w=majority&appName=Cluster0"
 PORT=3001
 
 ⚠️ El usuario debe existir en Database Access en MongoDB Atlas.
@@ -108,25 +109,31 @@ Crear / Editar / Listar / Eliminar
 
 Formularios con validaciones
 
-Vista Pug + JSON/Thunder Client
+Vistas Pug + soporte JSON (?formato=json)
 
 🟩 Módulo Empleados
 
 CRUD completo
 
-Rol / Área dinámicos
+Selección dinámica de Rol y Área
 
 Estado (activo/inactivo)
 
 ID numérico secuencial
 
-🟨 Módulo Roles
+🟨 Módulo Roles (precargados, sin modificaciones)
 
-Listado
+Los roles disponibles son:
 
-Vista de detalle
+| ID | Rol            |
+| -- | -------------- |
+| 1  | Administrativo |
+| 2  | Operario       |
+| 3  | Chofer         |
 
-Integración con empleados
+✔ Se listan
+✔ Se muestra el detalle
+❌ No se pueden crear, editar o eliminar
 
 🟥 Módulo Tareas
 
@@ -157,15 +164,11 @@ Se probaron las operaciones:
 📄 Todas las capturas se encuentran incluidas en el PDF de documentación.
 Archivo: “G8 - WebFix - Documentación.pdf” 
 
-G8 - Webfix - Documentación (1)
+G8 - Webfix - Documentación
 
 🔐 Seguridad y Variables de Entorno
 
 Se usa dotenv para la conexión Atlas.
-
-La cadena MongoDB NO debe publicarse en el repositorio.
-
-No se implementó JWT por no ser requerido para el sistema (explicado en documentación).
 
 🛠️ Mejoras Implementadas
 
@@ -189,15 +192,17 @@ IDs numéricos consistentes en todas las entidades
 
 Incluye:
 
-Objetivos generales y específicos
+Objetivos
 
-Funcionalidades del sistema
+Funcionalidades
 
-Diagramas y pruebas
+Diagramas
+
+Pruebas
 
 Roles del equipo
 
-Mejoras incorporadas
+Mejoras realizadas
 
 Conclusiones y dificultades
 
@@ -205,22 +210,16 @@ Uso de IA
 
 Bibliografía
 
-Documento incluido en la entrega
-📄 PROYECTO LogiFlow.pdf 
+Archivo incluido: PROYECTO LogiFlow.pdf
 
 🎥 Video de Defensa
-
-El video debe incluir:
 
 Explicación técnica del backend
 
 Demostración de CRUD
 
-Validaciones + errores controlados
-
 Explicación MongoDB Atlas
 
-Participación de los 3 integrantes
 
 👥 Autores
 | Integrante            | Aportes                                                                       |
