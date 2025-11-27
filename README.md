@@ -89,7 +89,7 @@ cd BackEnd-IFTS
 npm install
 
 3️⃣ Crear archivo .env
-MONGODB_URI="mongodb+srv://Proyecto:BackEnd@cluster0.j35ltw9.mongodb.net/BackendIFTS?retryWrites=true&w=majority&appName=Cluster0"
+MONGODB_URI={cadena de conexión}
 PORT=3001
 
 ⚠️ El usuario debe existir en Database Access en MongoDB Atlas.
